@@ -2,16 +2,9 @@ package com.mperminov.saythesame.ui.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 import com.google.android.gms.auth.api.Auth;
@@ -20,16 +13,19 @@ import com.mperminov.saythesame.R;
 import com.mperminov.saythesame.base.BaseActivity;
 import com.mperminov.saythesame.base.BaseApplication;
 import com.mperminov.saythesame.data.model.User;
+import com.mperminov.saythesame.ui.Login.fragments.SignInFragment;
+import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
 import com.mperminov.saythesame.ui.menu.MenuActivity;
 import javax.inject.Inject;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements
+    SignInFragment.SignUpClickListner, SignUpFragment.SignInClickListner {
   private static final String TAG_FB ="FACEBOOK LOGIN";
   //for facebook login
   private CallbackManager callbackManager;
 
 
-  @BindView(R.id.sign_in_fb_button) Button fbButton;
+  /*@BindView(R.id.sign_in_fb_button) Button fbButton;
   @BindView(R.id.sign_in_google_button) Button gglButton;
   @BindView(R.id.button_sign_up) Button signUp;
   @BindView(R.id.button_sign_in) Button signIn;
@@ -45,7 +41,7 @@ public class LoginActivity extends BaseActivity {
   @BindView(R.id.emailInputEdTxtSignIn) TextInputEditText emailEdTxtSignIn;
   @BindView(R.id.pswdInputLtSignIn) TextInputLayout pswdInLtSignIn;
   @BindView(R.id.pswdInputEdTxtSignIn) TextInputEditText pswdEdTxtSignIn;
-  @BindView(R.id.btnSignInProcess) Button btnProceedSignIn;
+  @BindView(R.id.btnSignInProcess) Button btnProceedSignIn;*/
   @Inject
   LoginPresenter presenter;
 
@@ -55,7 +51,12 @@ public class LoginActivity extends BaseActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
-    ButterKnife.bind(this);
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    SignUpFragment fragment = new SignUpFragment();
+    fragmentTransaction.add(R.id.fragment_container, fragment);
+    fragmentTransaction.commit();
+    //ButterKnife.bind(this);
   }
 
   @Override protected void setupActivityComponent() {
@@ -75,7 +76,7 @@ public class LoginActivity extends BaseActivity {
     super.onStop();
     presenter.unsubscribe();
   }
-  @OnClick(R.id.sign_in_google_button)
+/*  @OnClick(R.id.sign_in_google_button)
   public void onBtnSignWithGoogle(){
     Intent intent = presenter.loginWithGoogle();
     startActivityForResult(intent, RC_SIGN_IN_GOOGLE);
@@ -129,29 +130,35 @@ public class LoginActivity extends BaseActivity {
       nickInL.setError("");
     }
     return isInputValid;
-  }
+  }*/
 
-  @OnClick(R.id.button_sign_in)
+ /* @OnClick(R.id.button_sign_in)
   public void onBtnSignIn(){
-    emailInL.setVisibility(View.GONE);
+    *//*emailInL.setVisibility(View.GONE);
     passwdInL.setVisibility(View.GONE);
     nickInL.setVisibility(View.GONE);
     btnProceedSignUp.setVisibility(View.GONE);
     btnProceedSignUp.setVisibility(View.GONE);
     emailInLtSignIn.setVisibility(View.VISIBLE);
     pswdInLtSignIn.setVisibility(View.VISIBLE);
-    btnProceedSignIn.setVisibility(View.VISIBLE);
-  }
+    btnProceedSignIn.setVisibility(View.VISIBLE);*//*
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    SignInFragment fragment = new SignInFragment();
+    fragmentTransaction.replace(R.id.fragment_container, fragment);
+    fragmentTransaction.disallowAddToBackStack();
+    fragmentTransaction.commit();
+  }*/
 
-  @OnClick(R.id.btnSignInProcess)
+  /*@OnClick(R.id.btnSignInProcess)
   public void onBtnProceedSignIn(){
     if(checkInputSignIn()){
       presenter.loginWithEmail(emailEdTxtSignIn.getText().toString(),
           pswdEdTxtSignIn.getText().toString());
     }
-  }
+  }*/
 
-  private boolean checkInputSignIn() {
+  /*private boolean checkInputSignIn() {
     Boolean isInputValid = true;
     if(TextUtils.isEmpty(emailEdTxtSignIn.getText().toString()) ||
         !android.util.Patterns.EMAIL_ADDRESS.matcher(emailEdTxtSignIn.getText().toString()).matches()){
@@ -168,7 +175,7 @@ public class LoginActivity extends BaseActivity {
       pswdInLtSignIn.setError("");
     }
     return isInputValid;
-  }
+  }*/
 
   public void showLoginFail() {
     Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
@@ -179,7 +186,7 @@ public class LoginActivity extends BaseActivity {
   }
 
   public void showLoading(boolean loading) {
-    pb.setVisibility(loading ? View.VISIBLE : View.GONE);
+
   }
 
 
@@ -203,6 +210,26 @@ public class LoginActivity extends BaseActivity {
 
   public void showExistUsername(User user, String username) {
     Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show();
+  }
+
+
+
+  @Override public void onbtnSignInClick() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    SignInFragment fragment = new SignInFragment();
+    fragmentTransaction.replace(R.id.fragment_container, fragment);
+    fragmentTransaction.addToBackStack(null);
+    fragmentTransaction.commit();
+  }
+
+  @Override public void onbtnSignUpClick() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    SignUpFragment fragment = new SignUpFragment();
+    fragmentTransaction.replace(R.id.fragment_container, fragment);
+    fragmentTransaction.addToBackStack(null);
+    fragmentTransaction.commit();
   }
 }
 
