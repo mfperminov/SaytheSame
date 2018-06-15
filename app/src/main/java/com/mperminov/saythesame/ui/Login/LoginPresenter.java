@@ -3,6 +3,8 @@ package com.mperminov.saythesame.ui.Login;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -88,7 +90,7 @@ public class LoginPresenter implements BasePresenter {
                 Uri photoUri = profile.getPhotoUrl();
                 Log.d("New user:", providerId + " " + uid + " " + name + " " + email + " " + photoUri);
               }
-              processLogin(task.getResult().getUser(), task.getResult().getUser().getProviderData().get(1));
+              processLogin(task.getResult().getUser(), task.getResult().getUser().getProviderData().get(1),null);
             } else {
               activity.showLoading(false);
               activity.showLoginFail();
@@ -119,7 +121,7 @@ public class LoginPresenter implements BasePresenter {
                   Uri photoUri = profile.getPhotoUrl();
                   Log.d("New user:", providerId + " " + uid + " " + name + " " + email + " " + photoUri);
                 }
-                processLogin(task.getResult().getUser(), task.getResult().getUser().getProviderData().get(1));
+                processLogin(task.getResult().getUser(), task.getResult().getUser().getProviderData().get(1), null);
               } else {
                 activity.showLoading(false);
                 activity.showLoginFail();
@@ -131,9 +133,59 @@ public class LoginPresenter implements BasePresenter {
     }
   }
 
-  private void processLogin(FirebaseUser firebaseUser, UserInfo userInfo) {
+  protected void loginWithEmail(final String email, final String password) {
+    activity.showLoading(true);
+    firebaseUserService.getUserWithEmail(email, password)
+        .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+          @Override
+          public void onComplete(@NonNull Task<AuthResult> task) {
+            if(task.isSuccessful()) {
+              activity.showLoading(false);
+              for(UserInfo profile : task.getResult().getUser().getProviderData()) {
+                String providerId = profile.getProviderId();
+                String uid = profile.getUid();
+                String name = profile.getDisplayName();
+                String email = profile.getEmail();
+                Uri photoUri = profile.getPhotoUrl();
+                Log.d("User logged", providerId + " " + uid + " " + name + " " + email + " " + photoUri);
+              }
+              processLogin(task.getResult().getUser(), task.getResult().getUser().getProviderData().get(1),
+                  task.getResult().getUser().getProviderData().get(1).getDisplayName());
+            } else {
+              Log.d("Login not success", task.getException().toString());
+              activity.showLoading(false);
+
+            }
+          }
+        });
+
+  }
+
+  protected void createAccount(String email, String password, final String nickname) {
+    activity.showLoading(true);
+    firebaseUserService.createUserWithEmail(email, password)
+        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+          @Override
+          public void onComplete(@NonNull Task<AuthResult> task) {
+            if(task.isSuccessful()) {
+              processLogin(task.getResult().getUser(), task.getResult().getUser().getProviderData().get(1), nickname);
+            } else {
+              Log.d("Create not success", task.getException().toString());
+              activity.showLoading(false);
+              activity.showLoginFail();
+            }
+          }
+        });
+  }
+
+  private void processLogin(FirebaseUser firebaseUser, UserInfo userInfo, @Nullable String nickname) {
+    final String username;
     final User user = User.newInstance(firebaseUser, userInfo);
-    final String username = userInfo.getDisplayName();
+    if (TextUtils.isEmpty(userInfo.getDisplayName())){
+      username = nickname;
+    }else {
+      username = userInfo.getDisplayName();
+    }
     userService.getUser(user.getUid()).addListenerForSingleValueEvent(
         new ValueEventListener() {
           @Override
