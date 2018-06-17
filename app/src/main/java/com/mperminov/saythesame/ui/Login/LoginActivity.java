@@ -2,6 +2,7 @@ package com.mperminov.saythesame.ui.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ImageView;
@@ -24,7 +25,9 @@ import javax.inject.Inject;
 
 public class LoginActivity extends BaseActivity implements
     SignInFragment.SignUpClickListener, SignUpFragment.SignInClickListener {
-  private static final String TAG_FB ="FACEBOOK LOGIN";
+  private String errorMessage;
+
+  private static final String TAG_FB = "FACEBOOK LOGIN";
   //for facebook login
   private CallbackManager callbackManager;
   @BindView(R.id.btn_google) ImageView gglBtn;
@@ -80,17 +83,18 @@ public class LoginActivity extends BaseActivity implements
     super.onStop();
     presenter.unsubscribe();
   }
+
   @OnClick(R.id.btn_google)
-  public void onBtnSignWithGoogle(){
+  public void onBtnSignWithGoogle() {
     Intent intent = presenter.loginWithGoogle();
     startActivityForResult(intent, RC_SIGN_IN_GOOGLE);
   }
 
-
   @OnClick(R.id.btn_facebook)
-  public void onBtnSignWithFb(){
+  public void onBtnSignWithFb() {
     callbackManager = presenter.loginWithFacebook();
   }
+
   public void showLoginFail() {
     Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
   }
@@ -100,21 +104,19 @@ public class LoginActivity extends BaseActivity implements
   }
 
   public void showLoading(boolean loading) {
-
   }
-
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
     // google
-    if(requestCode == RC_SIGN_IN_GOOGLE) {
+    if (requestCode == RC_SIGN_IN_GOOGLE) {
       GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
       presenter.getAuthWithGoogle(result);
     }
     // facebook
-    else if(requestCode == CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode()) {
+    else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode()) {
       callbackManager.onActivityResult(requestCode, resultCode, data);
     }
   }
@@ -125,8 +127,6 @@ public class LoginActivity extends BaseActivity implements
   public void showExistUsername(User user, String username) {
     Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show();
   }
-
-
 
   @Override public void onbtnSignInClick() {
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -139,6 +139,27 @@ public class LoginActivity extends BaseActivity implements
 
   @Override public LoginPresenter providePresenterToSignUp() {
     return presenter;
+  }
+
+  @Override public void showResult(int errorCode) {
+    SignUpFragment curFragment = (SignUpFragment) getSupportFragmentManager()
+        .findFragmentById(R.id.fragment_container);
+    TextInputLayout emailInput = curFragment.getView().findViewById(R.id.emailInputL);
+    TextInputLayout nickInput = curFragment.getView().findViewById(R.id.nicknameInputL);
+    switch (errorCode) {
+      case 11:
+        emailInput.setError("E-mail is already in use");
+        break;
+      case 12:
+        emailInput.setError("Hui sosi");
+        break;
+      case 13:
+        nickInput.setError("Sorry, this nickname is already registered");
+        break;
+      default:
+        emailInput.setError("");
+        nickInput.setError("");
+    }
   }
 
   @Override public void onbtnSignUpClick() {

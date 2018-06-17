@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mperminov.saythesame.R;
+import com.mperminov.saythesame.ui.Login.LoginActivity;
 import com.mperminov.saythesame.ui.Login.LoginPresenter;
 
 /**
@@ -25,7 +26,7 @@ import com.mperminov.saythesame.ui.Login.LoginPresenter;
  */
 public class SignUpFragment extends Fragment {
   private LoginPresenter presenter;
-
+private LoginActivity mActivity;
   @BindView(R.id.button_sign_in) Button signIn;
   @BindView(R.id.emailInputL)TextInputLayout emailInL;
   @BindView(R.id.emailEdTxt) TextInputEditText emailEdTxt;
@@ -82,10 +83,11 @@ public class SignUpFragment extends Fragment {
   public void onBtnProceedSignUp(){
     if(checkInputSignUp()){
       presenter = signInClickListener.providePresenterToSignUp();
-      presenter.createAccount(emailEdTxt.getText().toString(),
+      presenter.checkNicknameAndProceed(emailEdTxt.getText().toString(),
           pswdEdTxt.getText().toString(),nickEdT.getText().toString());
     }
   }
+
   //check that forms are filled correctly
   //don't need to use db or much resource
   private boolean checkInputSignUp() {
@@ -128,5 +130,7 @@ public class SignUpFragment extends Fragment {
   public interface SignInClickListener {
     void onbtnSignInClick();
     LoginPresenter providePresenterToSignUp();
+    void showResult(int errorCode);
   }
+
 }
