@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +15,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mperminov.saythesame.R;
 import com.mperminov.saythesame.ui.Login.LoginPresenter;
-import javax.inject.Inject;
-
-
 
 public class SignInFragment extends Fragment {
 
 
  @BindView(R.id.button_sign_up) Button signUp;
- @BindView(R.id.emailInputLtSignin) TextInputLayout emailInLtSignIn;
+ @BindView(R.id.emailInputLtSignIn) TextInputLayout emailInLtSignIn;
  @BindView(R.id.emailInputEdTxtSignIn) TextInputEditText emailEdTxtSignIn;
  @BindView(R.id.pswdInputLtSignIn) TextInputLayout pswdInLtSignIn;
  @BindView(R.id.pswdInputEdTxtSignIn) TextInputEditText pswdEdTxtSignIn;
- @BindView(R.id.btnSignInProcess) Button btnProceedSignIn;
-  @Inject
-  LoginPresenter presenter;
+ @BindView(R.id.btnSignIn) Button btnProceedSignIn;
+ private LoginPresenter presenter;
 
-  private SignUpClickListner signUpClickListner;
+  private SignUpClickListener signUpClickListener;
 
   public SignInFragment() {
     // Required empty public constructor
@@ -46,17 +43,43 @@ public class SignInFragment extends Fragment {
 
   @OnClick(R.id.button_sign_up)
   public void onBtnSignUpClick(){
-    signUpClickListner.onbtnSignUpClick();
+    signUpClickListener.onbtnSignUpClick();
   }
 
+@OnClick(R.id.btnSignIn)
+  public void onBtnProceedSignIn(){
+    if(checkInputSignIn()){
+      presenter = signUpClickListener.providePresenterToSignIn();
+      presenter.loginWithEmail(emailEdTxtSignIn.getText().toString(),
+          pswdEdTxtSignIn.getText().toString());
+    }
+  }
 
+  private boolean checkInputSignIn() {
+    Boolean isInputValid = true;
+    if(TextUtils.isEmpty(emailEdTxtSignIn.getText().toString()) ||
+        !android.util.Patterns.EMAIL_ADDRESS.matcher(emailEdTxtSignIn.getText().toString()).matches()){
+      emailInLtSignIn.setError("Please enter a valid e-mail");
+      isInputValid = false;
+    }
+    if(TextUtils.isEmpty(pswdEdTxtSignIn.getText().toString())
+        || (pswdEdTxtSignIn.getText().toString().length() <= 6)){
+      pswdInLtSignIn.setError("Please enter a correct password (minimum 6 characters)");
+      isInputValid = false;
+    }
+    if(isInputValid){
+      emailInLtSignIn.setError("");
+      pswdInLtSignIn.setError("");
+    }
+    return isInputValid;
+  }
 
 
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    if (context instanceof SignUpClickListner) {
-      signUpClickListner = (SignUpClickListner) context;
+    if (context instanceof SignUpClickListener) {
+      signUpClickListener = (SignUpClickListener) context;
     } else {
       throw new RuntimeException(context.toString()
           + " must implement OnFragmentInteractionListener");
@@ -66,7 +89,7 @@ public class SignInFragment extends Fragment {
   @Override
   public void onDetach() {
     super.onDetach();
-    signUpClickListner = null;
+    signUpClickListener = null;
   }
 
   /**
@@ -79,7 +102,8 @@ public class SignInFragment extends Fragment {
    * "http://developer.android.com/training/basics/fragments/communicating.html"
    * >Communicating with Other Fragments</a> for more information.
    */
-  public interface SignUpClickListner {
+  public interface SignUpClickListener {
     void onbtnSignUpClick();
+    LoginPresenter providePresenterToSignIn();
   }
 }

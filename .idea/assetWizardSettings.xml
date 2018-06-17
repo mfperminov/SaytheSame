@@ -14,8 +14,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_drawing" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/app/src/main/res/drawable/drawing.svg" />
+                            <entry key="height" value="56" />
+                            <entry key="outputName" value="facebook" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/app/src/main/res/drawable/F_Logo_Online_04_2018/Color/SVG/flogo_RGB_HEX-1024.svg" />
+                            <entry key="width" value="56" />
                           </map>
                         </option>
                       </PersistentState>

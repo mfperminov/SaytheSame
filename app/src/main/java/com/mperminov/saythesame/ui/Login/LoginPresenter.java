@@ -133,7 +133,7 @@ public class LoginPresenter implements BasePresenter {
     }
   }
 
-  protected void loginWithEmail(final String email, final String password) {
+  public void loginWithEmail(final String email, final String password) {
     activity.showLoading(true);
     firebaseUserService.getUserWithEmail(email, password)
         .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -161,7 +161,7 @@ public class LoginPresenter implements BasePresenter {
 
   }
 
-  protected void createAccount(String email, String password, final String nickname) {
+  public void createAccount(String email, String password, final String nickname) {
     activity.showLoading(true);
     firebaseUserService.createUserWithEmail(email, password)
         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
