@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
@@ -71,6 +72,12 @@ public class LoginPresenter implements BasePresenter {
           @Override
           public void onError(FacebookException error) {
             activity.showLoginFail();
+            Log.d("FB error", error.toString());
+            if (error instanceof FacebookAuthorizationException) {
+              if (AccessToken.getCurrentAccessToken() != null) {
+                LoginManager.getInstance().logOut();
+              }
+            }
           }
         });
     return callbackManager;
@@ -96,6 +103,7 @@ public class LoginPresenter implements BasePresenter {
               processLogin(task.getResult().getUser(),
                   task.getResult().getUser().getProviderData().get(1), null);
             } else {
+              Log.d("error before processing",task.getException().toString());
               activity.showLoading(false);
               activity.showLoginFail();
             }

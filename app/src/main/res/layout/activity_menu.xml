@@ -1,12 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_margin="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+  <ImageView
+      android:id="@+id/photoIv"
+      android:layout_marginEnd="16dp"
+      android:layout_width="@dimen/avatar_width"
+      android:layout_height="@dimen/avatar_height"
+      android:layout_marginRight="16dp"
+      android:contentDescription="@string/menu_player_avatar_desc" />
   <TextView
-      android:id="@+id/test"
+      android:textSize="16sp"
+      android:id="@+id/nicknameTv"
+      android:layout_toRightOf="@id/photoIv"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      />
-
+      tools:text="Ivan Ivanov"
+      android:layout_toEndOf="@id/photoIv" />
+  <TextView
+      android:id="@+id/emailTv"
+      android:layout_below="@id/nicknameTv"
+      tools:text="ivanov@mail.ru"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@id/photoIv"
+      android:layout_toEndOf="@id/photoIv" />
+</RelativeLayout>
+  <Button
+      android:id="@+id/start_random_btn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:text="start random"/>
+  <TextView
+      android:id="@+id/testfield_tv"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
 </LinearLayout>

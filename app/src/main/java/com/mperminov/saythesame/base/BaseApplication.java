@@ -3,14 +3,17 @@ package com.mperminov.saythesame.base;
 import android.app.Application;
 import android.content.Context;
 import com.mperminov.saythesame.data.firebase.FirebaseModule;
+import com.mperminov.saythesame.data.model.Rival;
 import com.mperminov.saythesame.data.model.User;
+import com.mperminov.saythesame.data.rival.RivalComponent;
+import com.mperminov.saythesame.data.rival.RivalModule;
 import com.mperminov.saythesame.data.user.UserComponent;
 import com.mperminov.saythesame.data.user.UserModule;
 
 public class BaseApplication extends Application {
   private AppComponent appComponent;
   private UserComponent userComponent;
-  //private FriendComponent friendComponent;
+  private RivalComponent RivalComponent;
 
   public static BaseApplication get(Context context) {
     return (BaseApplication) context.getApplicationContext();
@@ -58,18 +61,18 @@ public class BaseApplication extends Application {
 
   public void releaseUserComponent() {
     userComponent = null;
-  }
-
-  public FriendComponent createFriendComponent(Friend friend) {
-    friendComponent = userComponent.plus(new FriendModule(friend));
-    return friendComponent;
-  }
-
-  public FriendComponent getFriendComponent() {
-    return friendComponent;
-  }
-
-  public void releaseFriendComponent() {
-    friendComponent = null;
   }*/
+
+  public RivalComponent createRivalComponent(Rival rival) {
+    RivalComponent = userComponent.plus(new RivalModule(rival));
+    return RivalComponent;
+  }
+
+  public RivalComponent getRivalComponent() {
+    return RivalComponent;
+  }
+
+  public void releaseRivalComponent() {
+    RivalComponent = null;
+  }
 }

@@ -44,6 +44,12 @@ dependencies {
   annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
   //butterknife
   implementation 'com.jakewharton:butterknife:8.8.1'
+  //picasso
+  implementation 'com.squareup.picasso:picasso:2.71828'
+  //firebase functions
+  implementation 'com.google.firebase:firebase-functions:16.1.0'
+  //firebase message
+  implementation 'com.google.firebase:firebase-messaging:17.1.0'
   annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
   implementation 'com.android.support:design:27.1.1'
 }

@@ -4,19 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import com.mperminov.saythesame.R;
 import com.mperminov.saythesame.base.BaseActivity;
 import com.mperminov.saythesame.base.BaseApplication;
 import com.mperminov.saythesame.data.model.User;
+import com.squareup.picasso.Picasso;
+
 import javax.inject.Inject;
 
 public class MenuActivity extends BaseActivity {
-  @BindView(R.id.test)
+  @BindView(R.id.nicknameTv)
+  TextView nickText;
+  @BindView(R.id.emailTv)
+  TextView emailText;
+  @BindView(R.id.photoIv)
+  ImageView avatarImage;
+  @BindView(R.id.start_random_btn)
+  Button randBtn;
+  @BindView(R.id.testfield_tv)
   TextView testTextView;
   @Inject User user;
+  @Inject MenuPresenter presenter;
 
   public static final int REQUEST_COMPLETED = 1003;
 
@@ -24,7 +39,14 @@ public class MenuActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_menu);
     ButterKnife.bind(this);
-    testTextView.setText(user.getUsername());
+    nickText.setText(user.getUsername());
+    emailText.setText(user.getEmail());
+    Picasso.get()
+            .load(user.getPhoto_url())
+            .centerCrop()
+            .resize((int) getResources().getDimension(R.dimen.avatar_width),
+                    (int) getResources().getDimension(R.dimen.avatar_height))
+            .into(avatarImage);
   }
 
   @Override protected void setupActivityComponent() {
@@ -55,5 +77,16 @@ public class MenuActivity extends BaseActivity {
     // шлем реквест код и исходное активити (логин или сплеш) финиширует
     ((ResultReceiver)getIntent().getParcelableExtra("finisher")).
         send(MenuActivity.REQUEST_COMPLETED, new Bundle());
+  }
+
+  @OnClick(R.id.start_random_btn)
+  public void enterRandomMode(){
+    presenter.queueUp();
+    randBtn.setEnabled(false);
+    randBtn.setClickable(false);
+  }
+
+  public void updateTestField(String text){
+    testTextView.setText(text);
   }
 }

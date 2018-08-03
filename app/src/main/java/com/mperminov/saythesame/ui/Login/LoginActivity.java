@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 public class LoginActivity extends BaseActivity implements
     SignInFragment.SignUpClickListener, SignUpFragment.SignInClickListener {
-  private String errorMessage;
 
   private static final String TAG_FB = "FACEBOOK LOGIN";
   //for facebook login
