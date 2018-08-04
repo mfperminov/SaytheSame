@@ -2,7 +2,6 @@ package com.mperminov.saythesame.ui.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ImageView;
@@ -18,38 +17,23 @@ import com.mperminov.saythesame.R;
 import com.mperminov.saythesame.base.BaseActivity;
 import com.mperminov.saythesame.base.BaseApplication;
 import com.mperminov.saythesame.data.model.User;
-import com.mperminov.saythesame.ui.Login.fragments.SignInFragment;
 import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
 import com.mperminov.saythesame.ui.menu.MenuActivity;
 import javax.inject.Inject;
 
-public class LoginActivity extends BaseActivity implements
-    SignInFragment.SignUpClickListener, SignUpFragment.SignInClickListener {
+public class LoginActivity extends BaseActivity /*implements SignUpFragment.SignInClickListener*/ {
 
   private static final String TAG_FB = "FACEBOOK LOGIN";
   //for facebook login
   private CallbackManager callbackManager;
   @BindView(R.id.btn_google) ImageView gglBtn;
   @BindView(R.id.btn_facebook) ImageView fcbBtn;
-  /*@BindView(R.id.sign_in_fb_button) Button fbButton;
-  @BindView(R.id.sign_in_google_button) Button gglButton;
-  @BindView(R.id.button_sign_up) Button signUp;
-  @BindView(R.id.button_sign_in) Button signIn;
-  @BindView(R.id.pBar) ProgressBar pb;
-  @BindView(R.id.emailInputL)TextInputLayout emailInL;
-  @BindView(R.id.emailEdTxt) TextInputEditText emailEdTxt;
-  @BindView(R.id.pswdInputL) TextInputLayout passwdInL;
-  @BindView(R.id.pswdEdTxt) TextInputEditText pswdEdTxt;
-  @BindView(R.id.nicknameInputL) TextInputLayout nickInL;
-  @BindView(R.id.nickEdTxt) TextInputEditText nickEdT;
-  @BindView(R.id.proceed_sign_up) Button btnProceedSignUp;
-  @BindView(R.id.emailInputLtSignin) TextInputLayout emailInLtSignIn;
-  @BindView(R.id.emailInputEdTxtSignIn) TextInputEditText emailEdTxtSignIn;
-  @BindView(R.id.pswdInputLtSignIn) TextInputLayout pswdInLtSignIn;
-  @BindView(R.id.pswdInputEdTxtSignIn) TextInputEditText pswdEdTxtSignIn;
-  @BindView(R.id.btnSignInProcess) Button btnProceedSignIn;*/
+
   @Inject
   LoginPresenter presenter;
+
+  @Inject
+  FragmentManager fragMan;
 
   private static final int RC_SIGN_IN_GOOGLE = 9001;
 
@@ -57,10 +41,9 @@ public class LoginActivity extends BaseActivity implements
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    FragmentTransaction fragmentTransaction = fragMan.beginTransaction();
     SignUpFragment fragment = new SignUpFragment();
-    fragmentTransaction.add(R.id.fragment_container, fragment);
+    fragmentTransaction.add(R.id.fragment_container, fragment,"signUp");
     fragmentTransaction.commit();
     ButterKnife.bind(this);
   }
@@ -127,51 +110,5 @@ public class LoginActivity extends BaseActivity implements
     Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show();
   }
 
-  @Override public void onbtnSignInClick() {
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    SignInFragment fragment = new SignInFragment();
-    fragmentTransaction.replace(R.id.fragment_container, fragment);
-    fragmentTransaction.disallowAddToBackStack();
-    fragmentTransaction.commit();
-  }
-
-  @Override public LoginPresenter providePresenterToSignUp() {
-    return presenter;
-  }
-
-  @Override public void showResult(int errorCode) {
-    SignUpFragment curFragment = (SignUpFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.fragment_container);
-    TextInputLayout emailInput = curFragment.getView().findViewById(R.id.emailInputL);
-    TextInputLayout nickInput = curFragment.getView().findViewById(R.id.nicknameInputL);
-    switch (errorCode) {
-      case 11:
-        emailInput.setError("E-mail is already in use");
-        break;
-      case 12:
-        emailInput.setError("Hui sosi");
-        break;
-      case 13:
-        nickInput.setError("Sorry, this nickname is already registered");
-        break;
-      default:
-        emailInput.setError("");
-        nickInput.setError("");
-    }
-  }
-
-  @Override public void onbtnSignUpClick() {
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    SignUpFragment fragment = new SignUpFragment();
-    fragmentTransaction.replace(R.id.fragment_container, fragment);
-    fragmentTransaction.disallowAddToBackStack();
-    fragmentTransaction.commit();
-  }
-
-  @Override public LoginPresenter providePresenterToSignIn() {
-    return presenter;
-  }
 }
 

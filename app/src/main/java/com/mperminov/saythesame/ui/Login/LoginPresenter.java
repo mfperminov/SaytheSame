@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import com.facebook.AccessToken;
@@ -28,6 +29,8 @@ import com.mperminov.saythesame.base.BasePresenter;
 import com.mperminov.saythesame.data.model.User;
 import com.mperminov.saythesame.data.source.remote.FirebaseUserService;
 import com.mperminov.saythesame.data.source.remote.UserService;
+import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
+
 import java.util.Arrays;
 
 public class LoginPresenter implements BasePresenter {
@@ -35,12 +38,14 @@ public class LoginPresenter implements BasePresenter {
   private LoginActivity activity;
   private FirebaseUserService firebaseUserService;
   private UserService userService;
+  private FragmentManager fragMan;
 
   public LoginPresenter(LoginActivity activity, FirebaseUserService firebaseUserService,
       UserService userService) {
     this.activity = activity;
     this.firebaseUserService = firebaseUserService;
     this.userService = userService;
+    fragMan = this.activity.getSupportFragmentManager();
   }
 
   @Override public void subscribe() {
@@ -183,7 +188,9 @@ public class LoginPresenter implements BasePresenter {
       public void onDataChange(DataSnapshot dataSnapshot) {
         if(dataSnapshot.exists()) {
           activity.showLoading(false);
-          activity.showResult(13);
+          SignUpFragment signUpFragment =  (SignUpFragment) fragMan.findFragmentByTag("signUp");
+          signUpFragment.showResult(13);
+          //activity.showResult(13);
         } else {
           createAccount(email,password,nickname);
         }
@@ -218,7 +225,8 @@ public class LoginPresenter implements BasePresenter {
               activity.showLoading(false);
               activity.showLoginFail();
             }
-            activity.showResult(errorCode);
+            SignUpFragment signUpFragment =  (SignUpFragment) fragMan.findFragmentByTag("signUp");
+            signUpFragment.showResult(errorCode);
           }
         });
   }

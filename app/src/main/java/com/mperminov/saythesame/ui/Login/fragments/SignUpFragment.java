@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +17,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mperminov.saythesame.R;
+import com.mperminov.saythesame.base.BaseApplication;
 import com.mperminov.saythesame.ui.Login.LoginActivity;
+import com.mperminov.saythesame.ui.Login.LoginActivityModule;
 import com.mperminov.saythesame.ui.Login.LoginPresenter;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,31 +31,44 @@ import com.mperminov.saythesame.ui.Login.LoginPresenter;
  * to handle interaction events.
  */
 public class SignUpFragment extends Fragment {
-  private LoginPresenter presenter;
-private LoginActivity mActivity;
-  @BindView(R.id.button_sign_in) Button signIn;
-  @BindView(R.id.emailInputL)TextInputLayout emailInL;
-  @BindView(R.id.emailEdTxt) TextInputEditText emailEdTxt;
-  @BindView(R.id.pswdInputL) TextInputLayout passwdInL;
-  @BindView(R.id.pswdEdTxt) TextInputEditText pswdEdTxt;
-  @BindView(R.id.nicknameInputL) TextInputLayout nickInL;
-  @BindView(R.id.nickEdTxt) TextInputEditText nickEdT;
-  @BindView(R.id.proceed_sign_up) Button procdSignUp;
+  //private LoginPresenter presenter;
+  @Inject
+  LoginPresenter presenter;
 
-  private SignInClickListener signInClickListener;
+  @Inject
+  FragmentManager fragMan;
+
+  @BindView(R.id.button_sign_in)
+  Button signIn;
+  @BindView(R.id.emailInputL)
+  TextInputLayout emailInL;
+  @BindView(R.id.emailEdTxt)
+  TextInputEditText emailEdTxt;
+  @BindView(R.id.pswdInputL)
+  TextInputLayout passwdInL;
+  @BindView(R.id.pswdEdTxt)
+  TextInputEditText pswdEdTxt;
+  @BindView(R.id.nicknameInputL)
+  TextInputLayout nickInL;
+  @BindView(R.id.nickEdTxt)
+  TextInputEditText nickEdT;
+  @BindView(R.id.proceed_sign_up)
+  Button procdSignUp;
+
 
   public SignUpFragment() {
     // Required empty public constructor
   }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
+                           Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
     ButterKnife.bind(this, view);
@@ -58,33 +77,33 @@ private LoginActivity mActivity;
 
   @Override
   public void onAttach(Context context) {
+    BaseApplication.get(context).getAppComponent()
+            .plus(new LoginActivityModule((LoginActivity) context))
+            .inject(this);
     super.onAttach(context);
-    if (context instanceof SignInClickListener) {
-      signInClickListener = (SignInClickListener) context;
-    } else {
-      throw new RuntimeException(context.toString()
-          + " must implement OnFragmentInteractionListener");
-    }
   }
 
   @Override
   public void onDetach() {
     super.onDetach();
-    signInClickListener = null;
   }
 
   @OnClick(R.id.button_sign_in)
   public void onbtnSignIn() {
-    signInClickListener.onbtnSignInClick();
+    FragmentTransaction fragmentTransaction = fragMan.beginTransaction();
+    SignInFragment fragment = new SignInFragment();
+    fragmentTransaction.replace(R.id.fragment_container, fragment,"signIn");
+    fragmentTransaction.disallowAddToBackStack();
+    fragmentTransaction.commit();
   }
 
 
   @OnClick(R.id.proceed_sign_up)
-  public void onBtnProceedSignUp(){
-    if(checkInputSignUp()){
-      presenter = signInClickListener.providePresenterToSignUp();
+  public void onBtnProceedSignUp() {
+    if (checkInputSignUp()) {
+      //presenter = signInClickListener.providePresenterToSignUp();
       presenter.checkNicknameAndProceed(emailEdTxt.getText().toString(),
-          pswdEdTxt.getText().toString(),nickEdT.getText().toString());
+              pswdEdTxt.getText().toString(), nickEdT.getText().toString());
     }
   }
 
@@ -92,21 +111,21 @@ private LoginActivity mActivity;
   //don't need to use db or much resource
   private boolean checkInputSignUp() {
     Boolean isInputValid = true;
-    if(TextUtils.isEmpty(emailEdTxt.getText().toString()) ||
-        !android.util.Patterns.EMAIL_ADDRESS.matcher(emailEdTxt.getText().toString()).matches()){
+    if (TextUtils.isEmpty(emailEdTxt.getText().toString()) ||
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(emailEdTxt.getText().toString()).matches()) {
       emailInL.setError("Please enter a valid e-mail");
       isInputValid = false;
     }
-    if(TextUtils.isEmpty(pswdEdTxt.getText().toString())
-        || (pswdEdTxt.getText().toString().length() <= 6)){
+    if (TextUtils.isEmpty(pswdEdTxt.getText().toString())
+            || (pswdEdTxt.getText().toString().length() <= 6)) {
       passwdInL.setError("Please enter a correct password (minimum 6 characters)");
       isInputValid = false;
     }
-    if(TextUtils.isEmpty(nickEdT.getText().toString())){
+    if (TextUtils.isEmpty(nickEdT.getText().toString())) {
       nickInL.setError("Please enter a nickname");
       isInputValid = false;
     }
-    if(isInputValid){
+    if (isInputValid) {
       emailInL.setError("");
       passwdInL.setError("");
       nickInL.setError("");
@@ -114,23 +133,26 @@ private LoginActivity mActivity;
     return isInputValid;
   }
 
-
-
-
-  /**
-   * This interface must be implemented by activities that contain this
-   * fragment to allow an interaction in this fragment to be communicated
-   * to the activity and potentially other fragments contained in that
-   * activity.
-   * <p>
-   * See the Android Training lesson <a href=
-   * "http://developer.android.com/training/basics/fragments/communicating.html"
-   * >Communicating with Other Fragments</a> for more information.
-   */
-  public interface SignInClickListener {
-    void onbtnSignInClick();
-    LoginPresenter providePresenterToSignUp();
-    void showResult(int errorCode);
+  public void showResult(int errorCode) {
+    switch (errorCode) {
+      case 11:
+        emailInL.setError("E-mail is already in use");
+        break;
+      case 12:
+        emailInL.setError("Hui sosi");
+        break;
+      case 13:
+        nickInL.setError("Sorry, this nickname is already registered");
+        break;
+      default:
+        emailInL.setError("");
+        nickInL.setError("");
+    }
   }
-
 }
+
+
+
+
+
+

@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.mperminov.saythesame.ui.menu.MenuActivity"></activity>
+        <activity android:name=".ui.menu.MenuActivity"></activity>
       <!-- Facebook Configuration -->
       <meta-data
           android:name="com.facebook.sdk.ApplicationId"
@@ -47,12 +47,7 @@
           <data android:scheme="@string/fb_login_protocol_scheme" />
         </intent-filter>
       </activity>
-        <service
-            android:name=".MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
+        <activity android:name=".ui.game.GameActivity" />
     </application>
 
 </manifest>

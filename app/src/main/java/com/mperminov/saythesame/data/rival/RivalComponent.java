@@ -1,12 +1,12 @@
 package com.mperminov.saythesame.data.rival;
 
-import com.mperminov.saythesame.base.annotation.RivalScope;
+import com.mperminov.saythesame.base.annotation.GameScope;
 import com.mperminov.saythesame.ui.game.GameActivityComponent;
 import com.mperminov.saythesame.ui.game.GameActivityModule;
 
 import dagger.Subcomponent;
 
-    @RivalScope
+    @GameScope
     @Subcomponent(
             modules = {
                     RivalModule.class

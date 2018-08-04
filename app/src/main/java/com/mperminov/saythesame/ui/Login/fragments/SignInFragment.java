@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mperminov.saythesame.R;
+import com.mperminov.saythesame.base.BaseApplication;
+import com.mperminov.saythesame.ui.Login.LoginActivity;
+import com.mperminov.saythesame.ui.Login.LoginActivityComponent;
+import com.mperminov.saythesame.ui.Login.LoginActivityModule;
 import com.mperminov.saythesame.ui.Login.LoginPresenter;
+
+import javax.inject.Inject;
 
 public class SignInFragment extends Fragment {
 
@@ -25,9 +33,14 @@ public class SignInFragment extends Fragment {
  @BindView(R.id.pswdInputLtSignIn) TextInputLayout pswdInLtSignIn;
  @BindView(R.id.pswdInputEdTxtSignIn) TextInputEditText pswdEdTxtSignIn;
  @BindView(R.id.btnSignIn) Button btnProceedSignIn;
- private LoginPresenter presenter;
 
-  private SignUpClickListener signUpClickListener;
+    @Inject
+    LoginPresenter presenter;
+
+    @Inject
+    FragmentManager fragMan;
+
+
 
   public SignInFragment() {
     // Required empty public constructor
@@ -43,13 +56,17 @@ public class SignInFragment extends Fragment {
 
   @OnClick(R.id.button_sign_up)
   public void onBtnSignUpClick(){
-    signUpClickListener.onbtnSignUpClick();
+      FragmentTransaction fragmentTransaction = fragMan.beginTransaction();
+      SignUpFragment fragment = new SignUpFragment();
+      fragmentTransaction.replace(R.id.fragment_container, fragment,"signUp");
+      fragmentTransaction.disallowAddToBackStack();
+      fragmentTransaction.commit();
   }
 
 @OnClick(R.id.btnSignIn)
   public void onBtnProceedSignIn(){
     if(checkInputSignIn()){
-      presenter = signUpClickListener.providePresenterToSignIn();
+      //presenter = signUpClickListener.providePresenterToSignIn();
       presenter.loginWithEmail(emailEdTxtSignIn.getText().toString(),
           pswdEdTxtSignIn.getText().toString());
     }
@@ -77,33 +94,15 @@ public class SignInFragment extends Fragment {
 
   @Override
   public void onAttach(Context context) {
+      BaseApplication.get(context).getAppComponent()
+              .plus(new LoginActivityModule((LoginActivity)context))
+              .inject(this);
     super.onAttach(context);
-    if (context instanceof SignUpClickListener) {
-      signUpClickListener = (SignUpClickListener) context;
-    } else {
-      throw new RuntimeException(context.toString()
-          + " must implement OnFragmentInteractionListener");
-    }
   }
 
   @Override
   public void onDetach() {
     super.onDetach();
-    signUpClickListener = null;
-  }
-
-  /**
-   * This interface must be implemented by activities that contain this
-   * fragment to allow an interaction in this fragment to be communicated
-   * to the activity and potentially other fragments contained in that
-   * activity.
-   * <p>
-   * See the Android Training lesson <a href=
-   * "http://developer.android.com/training/basics/fragments/communicating.html"
-   * >Communicating with Other Fragments</a> for more information.
-   */
-  public interface SignUpClickListener {
-    void onbtnSignUpClick();
-    LoginPresenter providePresenterToSignIn();
+    //signUpClickListener = null;
   }
 }
