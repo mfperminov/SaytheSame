@@ -18,5 +18,5 @@ import dagger.Subcomponent;
 public interface UserComponent {
   MenuActivityComponent plus(MenuActivityModule activityModule);
   RivalComponent plus(RivalModule friendModule);
-  GameActivityComponent plus(GameActivityModule gameModule);
+  //GameActivityComponent plus(GameActivityModule gameModule);
 }

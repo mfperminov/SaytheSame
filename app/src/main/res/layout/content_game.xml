@@ -2,8 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/test"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/photoIv"
+            android:layout_marginEnd="16dp"
+            android:layout_width="@dimen/avatar_width"
+            android:layout_height="@dimen/avatar_height"
+            android:layout_marginRight="16dp"
+            android:contentDescription="@string/menu_player_avatar_desc" />
+        <TextView
+            android:textSize="16sp"
+            android:id="@+id/nickrivalTv"
+            android:layout_toRightOf="@id/photoIv"
+            android:textColor="#FFFFFF"
+            android:text="jfrgjsrg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/photoIv" />
+        <TextView
+            android:id="@+id/emailTv"
+            android:layout_below="@id/nickrivalTv"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/photoIv"
+            android:layout_toEndOf="@id/photoIv"
+            />
+    </RelativeLayout>
 
     <LinearLayout
+        android:layout_below="@id/test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
