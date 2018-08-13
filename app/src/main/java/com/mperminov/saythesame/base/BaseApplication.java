@@ -11,44 +11,44 @@ import com.mperminov.saythesame.data.user.UserComponent;
 import com.mperminov.saythesame.data.user.UserModule;
 
 public class BaseApplication extends Application {
-  private AppComponent appComponent;
-  private UserComponent userComponent;
-  private RivalComponent RivalComponent;
+    private AppComponent appComponent;
+    private UserComponent userComponent;
+    private RivalComponent RivalComponent;
 
-  public static BaseApplication get(Context context) {
-    return (BaseApplication) context.getApplicationContext();
-  }
+    public static BaseApplication get(Context context) {
+        return (BaseApplication) context.getApplicationContext();
+    }
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-    initAppComponent();
-  }
+        initAppComponent();
+    }
 
-  private void initAppComponent() {
-    appComponent = DaggerAppComponent.builder()
-        .appModule(new AppModule(this))
-        .firebaseModule(new FirebaseModule())
-        .build();
-  }
+    private void initAppComponent() {
+        appComponent = DaggerAppComponent.builder()
+            .appModule(new AppModule(this))
+            .firebaseModule(new FirebaseModule())
+            .build();
+    }
 
-  public AppComponent getAppComponent() {
-    return appComponent;
-  }
+    public AppComponent getAppComponent() {
+        return appComponent;
+    }
 
-  public UserComponent createUserComponent(User user) {
-    userComponent = appComponent.plus(new UserModule(user));
-    return userComponent;
-  }
+    public UserComponent createUserComponent(User user) {
+        userComponent = appComponent.plus(new UserModule(user));
+        return userComponent;
+    }
 
-  public UserComponent getUserComponent() {
-    return userComponent;
-  }
+    public UserComponent getUserComponent() {
+        return userComponent;
+    }
 
-  public void releaseUserComponent() {
-    userComponent = null;
-  }
+    public void releaseUserComponent() {
+        userComponent = null;
+    }
 
   /*public UserComponent createUserComponent(User user) {
     userComponent = appComponent.plus(new UserModule(user));
@@ -63,16 +63,16 @@ public class BaseApplication extends Application {
     userComponent = null;
   }*/
 
-  public RivalComponent createRivalComponent(Rival rival) {
-    RivalComponent = userComponent.plus(new RivalModule(rival));
-    return RivalComponent;
-  }
+    public RivalComponent createRivalComponent(Rival rival) {
+        RivalComponent = userComponent.plus(new RivalModule(rival));
+        return RivalComponent;
+    }
 
-  public RivalComponent getRivalComponent() {
-    return RivalComponent;
-  }
+    public RivalComponent getRivalComponent() {
+        return RivalComponent;
+    }
 
-  public void releaseRivalComponent() {
-    RivalComponent = null;
-  }
+    public void releaseRivalComponent() {
+        RivalComponent = null;
+    }
 }

@@ -9,15 +9,15 @@ import javax.inject.Singleton;
 
 @Module
 public class FirebaseModule {
-  @Provides
-  @Singleton
-  public FirebaseUserService provideFirebaseUserService(Application application) {
-    return new FirebaseUserService(application);
-  }
+    @Provides
+    @Singleton
+    public FirebaseUserService provideFirebaseUserService(Application application) {
+        return new FirebaseUserService(application);
+    }
 
-  @Provides
-  @Singleton
-  public UserService provideUserService(Application application) {
-    return new UserService(application);
-  }
+    @Provides
+    @Singleton
+    public UserService provideUserService(Application application) {
+        return new UserService(application);
+    }
 }

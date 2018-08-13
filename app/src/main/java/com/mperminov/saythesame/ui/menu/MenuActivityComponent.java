@@ -10,5 +10,5 @@ import dagger.Subcomponent;
     }
 )
 public interface MenuActivityComponent {
-  MenuActivity inject(MenuActivity activity);
+    MenuActivity inject(MenuActivity activity);
 }

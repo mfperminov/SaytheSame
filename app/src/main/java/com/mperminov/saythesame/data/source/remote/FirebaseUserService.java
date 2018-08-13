@@ -22,78 +22,80 @@ import com.mperminov.saythesame.base.BaseActivity;
 import com.mperminov.saythesame.data.model.User;
 
 public class FirebaseUserService {
-  private Application application;
+    private Application application;
 
-  private FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
 
-  // for google
-  private GoogleApiClient googleApiClient;
+    // for google
+    private GoogleApiClient googleApiClient;
 
-  // for facebook
-  private CallbackManager callbackManager;
+    // for facebook
+    private CallbackManager callbackManager;
 
-  public FirebaseUserService(Application application) {
-    this.application = application;
-    this.firebaseAuth = FirebaseAuth.getInstance();
-  }
-
-  public Task<AuthResult> getUserWithEmail(String email, String password) {
-    return firebaseAuth.signInWithEmailAndPassword(email, password);
-  }
-
-  public Task<AuthResult> createUserWithEmail(String email, String password) {
-    return firebaseAuth.createUserWithEmailAndPassword(email, password);
-  }
-
-  public Intent getUserWithGoogle(BaseActivity activity) {
-    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(activity.getString(R.string.default_web_client_id))
-        .requestEmail()
-        .build();
-
-    googleApiClient = new GoogleApiClient.Builder(activity)
-        .enableAutoManage(activity, new GoogleApiClient.OnConnectionFailedListener() {
-          @Override
-          public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-          }
-        })
-        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-        .build();
-
-    return Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-  }
-
-  public Task<AuthResult> getAuthWithGoogle(final BaseActivity activity, GoogleSignInAccount acct) {
-    AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-    return firebaseAuth.signInWithCredential(credential);
-  }
-
-  public CallbackManager getUserWithFacebook() {
-    callbackManager = CallbackManager.Factory.create();
-    return callbackManager;
-  }
-
-  public Task<AuthResult> getAuthWithFacebook(AccessToken token) {
-    AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-    return firebaseAuth.signInWithCredential(credential);
-  }
-
-  public void logOut(String provider) {
-    firebaseAuth.signOut();
-    if (provider.equals("facebook.com")) {
-      LoginManager.getInstance().logOut();
-    } else if (provider.equals("google.com")) {
-      Auth.GoogleSignInApi.signOut(googleApiClient);
+    public FirebaseUserService(Application application) {
+        this.application = application;
+        this.firebaseAuth = FirebaseAuth.getInstance();
     }
-  }
 
-  public void deleteUser(String uid) {
+    public Task<AuthResult> getUserWithEmail(String email, String password) {
+        return firebaseAuth.signInWithEmailAndPassword(email, password);
+    }
 
-  }
+    public Task<AuthResult> createUserWithEmail(String email, String password) {
+        return firebaseAuth.createUserWithEmailAndPassword(email, password);
+    }
 
-  public void updateUser(User user) {
+    public Intent getUserWithGoogle(BaseActivity activity) {
+        GoogleSignInOptions gso =
+            new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(activity.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-  }
+        googleApiClient = new GoogleApiClient.Builder(activity)
+            .enableAutoManage(activity, new GoogleApiClient.OnConnectionFailedListener() {
+                @Override
+                public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                }
+            })
+            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+            .build();
+
+        return Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+    }
+
+    public Task<AuthResult> getAuthWithGoogle(final BaseActivity activity,
+        GoogleSignInAccount acct) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        return firebaseAuth.signInWithCredential(credential);
+    }
+
+    public CallbackManager getUserWithFacebook() {
+        callbackManager = CallbackManager.Factory.create();
+        return callbackManager;
+    }
+
+    public Task<AuthResult> getAuthWithFacebook(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        return firebaseAuth.signInWithCredential(credential);
+    }
+
+    public void logOut(String provider) {
+        firebaseAuth.signOut();
+        if (provider.equals("facebook.com")) {
+            LoginManager.getInstance().logOut();
+        } else if (provider.equals("google.com")) {
+            Auth.GoogleSignInApi.signOut(googleApiClient);
+        }
+    }
+
+    public void deleteUser(String uid) {
+
+    }
+
+    public void updateUser(User user) {
+
+    }
 }
 
 

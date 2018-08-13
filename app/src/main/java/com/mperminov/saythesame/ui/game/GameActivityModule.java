@@ -1,9 +1,9 @@
 package com.mperminov.saythesame.ui.game;
 
+import com.google.firebase.functions.FirebaseFunctions;
 import com.mperminov.saythesame.base.annotation.ActivityScope;
 import com.mperminov.saythesame.data.model.Rival;
 import com.mperminov.saythesame.data.model.User;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -26,4 +26,5 @@ public class GameActivityModule {
     GamePresenter provideGamePresenter(User user, Rival rival) {
         return new GamePresenter(activity, user, rival);
     }
+
 }

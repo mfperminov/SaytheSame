@@ -3,7 +3,6 @@ package com.mperminov.saythesame.ui.Login;
 import com.mperminov.saythesame.base.annotation.ActivityScope;
 import com.mperminov.saythesame.ui.Login.fragments.SignInFragment;
 import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
-
 import dagger.Subcomponent;
 
 @ActivityScope
@@ -13,7 +12,9 @@ import dagger.Subcomponent;
     }
 )
 public interface LoginActivityComponent {
-  LoginActivity inject(LoginActivity activity);
-  SignInFragment inject (SignInFragment sginFrag);
-  SignUpFragment inject (SignUpFragment sgupFrag);
+    LoginActivity inject(LoginActivity activity);
+
+    SignInFragment inject(SignInFragment sginFrag);
+
+    SignUpFragment inject(SignUpFragment sgupFrag);
 }

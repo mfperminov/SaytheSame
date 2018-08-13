@@ -10,8 +10,8 @@ import javax.inject.Scope;
 // injector may retain the instance for possible reuse in a later injection. If multiple threads
 // can access a scoped instance, its implementation should be thread safe. The implementation
 // of the scope itself is left up to the injector.
-  public @interface ActivityScope {
-  //this annotation use by all Activities (for now EnterActivity)
-  }
+public @interface ActivityScope {
+    //this annotation use by all Activities (for now EnterActivity)
+}
 
 

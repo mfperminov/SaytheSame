@@ -5,8 +5,6 @@ import com.mperminov.saythesame.data.user.UserComponent;
 import com.mperminov.saythesame.data.user.UserModule;
 import com.mperminov.saythesame.ui.Login.LoginActivityComponent;
 import com.mperminov.saythesame.ui.Login.LoginActivityModule;
-import com.mperminov.saythesame.ui.menu.MenuActivityComponent;
-import com.mperminov.saythesame.ui.menu.MenuActivityModule;
 import dagger.Component;
 import javax.inject.Singleton;
 
@@ -19,5 +17,6 @@ import javax.inject.Singleton;
 )
 public interface AppComponent {
     LoginActivityComponent plus(LoginActivityModule activityModule);
+
     UserComponent plus(UserModule userModule);
 }

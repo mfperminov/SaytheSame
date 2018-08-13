@@ -30,260 +30,271 @@ import com.mperminov.saythesame.data.model.User;
 import com.mperminov.saythesame.data.source.remote.FirebaseUserService;
 import com.mperminov.saythesame.data.source.remote.UserService;
 import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
-
 import java.util.Arrays;
 
 public class LoginPresenter implements BasePresenter {
-  int errorCode = 0;
-  private LoginActivity activity;
-  private FirebaseUserService firebaseUserService;
-  private UserService userService;
-  private FragmentManager fragMan;
+    int errorCode = 0;
+    private LoginActivity activity;
+    private FirebaseUserService firebaseUserService;
+    private UserService userService;
+    private FragmentManager fragMan;
 
-  public LoginPresenter(LoginActivity activity, FirebaseUserService firebaseUserService,
-      UserService userService) {
-    this.activity = activity;
-    this.firebaseUserService = firebaseUserService;
-    this.userService = userService;
-    fragMan = this.activity.getSupportFragmentManager();
-  }
+    public LoginPresenter(LoginActivity activity, FirebaseUserService firebaseUserService,
+        UserService userService) {
+        this.activity = activity;
+        this.firebaseUserService = firebaseUserService;
+        this.userService = userService;
+        fragMan = this.activity.getSupportFragmentManager();
+    }
 
-  @Override public void subscribe() {
+    @Override public void subscribe() {
 
-  }
+    }
 
-  @Override public void unsubscribe() {
+    @Override public void unsubscribe() {
 
-  }
+    }
 
-  protected CallbackManager loginWithFacebook() {
-    //create a callback manager
-    CallbackManager callbackManager = firebaseUserService.getUserWithFacebook();
-    LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("email",
-        "public_profile"));
-    LoginManager.getInstance().registerCallback(callbackManager,
-        new FacebookCallback<LoginResult>() {
-          @Override
-          public void onSuccess(LoginResult loginResult) {
-            getAuthWithFacebook(loginResult.getAccessToken());
-            Log.d("mperminov", "facebook login succesful");
-          }
-
-          @Override
-          public void onCancel() {
-            activity.showLoginFail();
-          }
-
-          @Override
-          public void onError(FacebookException error) {
-            activity.showLoginFail();
-            Log.d("FB error", error.toString());
-            if (error instanceof FacebookAuthorizationException) {
-              if (AccessToken.getCurrentAccessToken() != null) {
-                LoginManager.getInstance().logOut();
-              }
-            }
-          }
-        });
-    return callbackManager;
-  }
-
-  private void getAuthWithFacebook(AccessToken accessToken) {
-    activity.showLoading(true);
-    firebaseUserService.getAuthWithFacebook(accessToken)
-        .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-          @Override
-          public void onComplete(@NonNull Task<AuthResult> task) {
-            if (task.isSuccessful()) {
-              activity.showLoading(false);
-              for (UserInfo profile : task.getResult().getUser().getProviderData()) {
-                String providerId = profile.getProviderId();
-                String uid = profile.getUid();
-                String name = profile.getDisplayName();
-                String email = profile.getEmail();
-                Uri photoUri = profile.getPhotoUrl();
-                Log.d("New user:",
-                    providerId + " " + uid + " " + name + " " + email + " " + photoUri);
-              }
-              processLogin(task.getResult().getUser(),
-                  task.getResult().getUser().getProviderData().get(1), null);
-            } else {
-              Log.d("error before processing",task.getException().toString());
-              activity.showLoading(false);
-              activity.showLoginFail();
-            }
-          }
-        });
-  }
-
-  public Intent loginWithGoogle() {
-    return firebaseUserService.getUserWithGoogle(activity);
-  }
-
-  public void getAuthWithGoogle(GoogleSignInResult result) {
-    activity.showLoading(true);
-    if (result.isSuccess()) {
-      final GoogleSignInAccount acct = result.getSignInAccount();
-      firebaseUserService.getAuthWithGoogle(activity, acct)
-          .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-              if (task.isSuccessful()) {
-                activity.showLoading(false);
-                for (UserInfo profile : task.getResult().getUser().getProviderData()) {
-                  String providerId = profile.getProviderId();
-                  String uid = profile.getUid();
-                  String name = profile.getDisplayName();
-                  String email = profile.getEmail();
-                  Uri photoUri = profile.getPhotoUrl();
-                  Log.d("New user:",
-                      providerId + " " + uid + " " + name + " " + email + " " + photoUri);
+    protected CallbackManager loginWithFacebook() {
+        //create a callback manager
+        CallbackManager callbackManager = firebaseUserService.getUserWithFacebook();
+        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("email",
+            "public_profile"));
+        LoginManager.getInstance().registerCallback(callbackManager,
+            new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    getAuthWithFacebook(loginResult.getAccessToken());
+                    Log.d("mperminov", "facebook login succesful");
                 }
-                processLogin(task.getResult().getUser(),
-                    task.getResult().getUser().getProviderData().get(1), null);
-              } else {
-                activity.showLoading(false);
-                activity.showLoginFail();
-              }
-            }
-          });
-    } else {
-      activity.showLoginFail();
+
+                @Override
+                public void onCancel() {
+                    activity.showLoginFail();
+                }
+
+                @Override
+                public void onError(FacebookException error) {
+                    activity.showLoginFail();
+                    Log.d("FB error", error.toString());
+                    if (error instanceof FacebookAuthorizationException) {
+                        if (AccessToken.getCurrentAccessToken() != null) {
+                            LoginManager.getInstance().logOut();
+                        }
+                    }
+                }
+            });
+        return callbackManager;
     }
-  }
 
-  public void loginWithEmail(final String email, final String password) {
-    activity.showLoading(true);
-    firebaseUserService.getUserWithEmail(email, password)
-        .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-          @Override
-          public void onComplete(@NonNull Task<AuthResult> task) {
-            if (task.isSuccessful()) {
-              activity.showLoading(false);
-              for (UserInfo profile : task.getResult().getUser().getProviderData()) {
-                String providerId = profile.getProviderId();
-                String uid = profile.getUid();
-                String name = profile.getDisplayName();
-                String email = profile.getEmail();
-                Uri photoUri = profile.getPhotoUrl();
-                Log.d("User logged",
-                    providerId + " " + uid + " " + name + " " + email + " " + photoUri);
-              }
-              processLogin(task.getResult().getUser(),
-                  task.getResult().getUser().getProviderData().get(1),
-                  task.getResult().getUser().getProviderData().get(1).getDisplayName());
-            } else {
-              Log.d("Login not success", task.getException().toString());
-              activity.showLoading(false);
-            }
-          }
-        });
-  }
+    private void getAuthWithFacebook(AccessToken accessToken) {
+        activity.showLoading(true);
+        firebaseUserService.getAuthWithFacebook(accessToken)
+            .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        activity.showLoading(false);
+                        for (UserInfo profile : task.getResult().getUser().getProviderData()) {
+                            String providerId = profile.getProviderId();
+                            String uid = profile.getUid();
+                            String name = profile.getDisplayName();
+                            String email = profile.getEmail();
+                            Uri photoUri = profile.getPhotoUrl();
+                            Log.d("New user:",
+                                providerId + " " + uid + " " + name + " " + email + " " + photoUri);
+                        }
+                        processLogin(task.getResult().getUser(),
+                            task.getResult().getUser().getProviderData().get(1), null);
+                    } else {
+                        Log.d("error before processing", task.getException().toString());
+                        activity.showLoading(false);
+                        activity.showLoginFail();
+                    }
+                }
+            });
+    }
 
-  public void checkNicknameAndProceed(final String email, final String password, final String nickname){
-    activity.showLoading(true);
-    DatabaseReference nickNameRef = userService.getUserByUsername(nickname);
-    ValueEventListener eventListener = new ValueEventListener() {
-      @Override
-      public void onDataChange(DataSnapshot dataSnapshot) {
-        if(dataSnapshot.exists()) {
-          activity.showLoading(false);
-          SignUpFragment signUpFragment =  (SignUpFragment) fragMan.findFragmentByTag("signUp");
-          signUpFragment.showResult(13);
-          //activity.showResult(13);
+    public Intent loginWithGoogle() {
+        return firebaseUserService.getUserWithGoogle(activity);
+    }
+
+    public void getAuthWithGoogle(GoogleSignInResult result) {
+        activity.showLoading(true);
+        if (result.isSuccess()) {
+            final GoogleSignInAccount acct = result.getSignInAccount();
+            firebaseUserService.getAuthWithGoogle(activity, acct)
+                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            activity.showLoading(false);
+                            for (UserInfo profile : task.getResult().getUser().getProviderData()) {
+                                String providerId = profile.getProviderId();
+                                String uid = profile.getUid();
+                                String name = profile.getDisplayName();
+                                String email = profile.getEmail();
+                                Uri photoUri = profile.getPhotoUrl();
+                                Log.d("New user:",
+                                    providerId
+                                        + " "
+                                        + uid
+                                        + " "
+                                        + name
+                                        + " "
+                                        + email
+                                        + " "
+                                        + photoUri);
+                            }
+                            processLogin(task.getResult().getUser(),
+                                task.getResult().getUser().getProviderData().get(1), null);
+                        } else {
+                            activity.showLoading(false);
+                            activity.showLoginFail();
+                        }
+                    }
+                });
         } else {
-          createAccount(email,password,nickname);
-        }
-      }
-
-      @Override
-      public void onCancelled(DatabaseError databaseError) {}
-    };
-    nickNameRef.addListenerForSingleValueEvent(eventListener);
-  }
-
-  public void createAccount(String email, String password, final String nickname) {
-    activity.showLoading(true);
-    firebaseUserService.createUserWithEmail(email, password)
-        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-          @Override
-          public void onComplete(@NonNull Task<AuthResult> task) {
-            if (task.isSuccessful()) {
-              processLogin(task.getResult().getUser(),
-                  task.getResult().getUser().getProviderData().get(1), nickname);
-            } else {
-              Log.d("Create not success", task.getException().toString());
-              Log.d("message",task.getException().getMessage());
-              switch (task.getException().getMessage()) {
-                case "The email address is already in use by another account.":
-                  errorCode = 11;
-                  break;
-                default:
-                  errorCode = 12;
-                  break;
-              }
-              activity.showLoading(false);
-              activity.showLoginFail();
-            }
-            SignUpFragment signUpFragment =  (SignUpFragment) fragMan.findFragmentByTag("signUp");
-            signUpFragment.showResult(errorCode);
-          }
-        });
-  }
-
-  private void processLogin(FirebaseUser firebaseUser, UserInfo userInfo,
-      @Nullable String nickname) {
-    final String username;
-    final User user = User.newInstance(firebaseUser, userInfo);
-    if (TextUtils.isEmpty(userInfo.getDisplayName())) {
-      username = nickname;
-    } else {
-      username = userInfo.getDisplayName();
-    }
-    userService.getUser(user.getUid()).addListenerForSingleValueEvent(
-        new ValueEventListener() {
-          @Override
-          public void onDataChange(DataSnapshot dataSnapshot) {
-            User remoteUser = dataSnapshot.getValue(User.class);
-            if (remoteUser == null || remoteUser.getUsername() == null) {
-              createUser(user, username);
-            } else {
-              activity.showLoginSuccess(remoteUser);
-            }
-          }
-
-          @Override
-          public void onCancelled(DatabaseError databaseError) {
             activity.showLoginFail();
-          }
         }
-    );
-  }
+    }
 
-  public void createUser(final User user, final String username) {
-    activity.showLoading(true);
-    userService.getUserByUsername(username).addListenerForSingleValueEvent(
-        new ValueEventListener() {
-          @Override
-          public void onDataChange(DataSnapshot dataSnapshot) {
-            boolean exists = dataSnapshot.exists();
-            if (!exists) {
-              activity.showLoading(false);
-              user.setUsername(username);
-              userService.createUser(user);
-              activity.showLoginSuccess(user);
-            } else {
-              activity.showLoading(false);
-              activity.showExistUsername(user, username);
+    public void loginWithEmail(final String email, final String password) {
+        activity.showLoading(true);
+        firebaseUserService.getUserWithEmail(email, password)
+            .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        activity.showLoading(false);
+                        for (UserInfo profile : task.getResult().getUser().getProviderData()) {
+                            String providerId = profile.getProviderId();
+                            String uid = profile.getUid();
+                            String name = profile.getDisplayName();
+                            String email = profile.getEmail();
+                            Uri photoUri = profile.getPhotoUrl();
+                            Log.d("User logged",
+                                providerId + " " + uid + " " + name + " " + email + " " + photoUri);
+                        }
+                        processLogin(task.getResult().getUser(),
+                            task.getResult().getUser().getProviderData().get(1),
+                            task.getResult().getUser().getProviderData().get(1).getDisplayName());
+                    } else {
+                        Log.d("Login not success", task.getException().toString());
+                        activity.showLoading(false);
+                    }
+                }
+            });
+    }
+
+    public void checkNicknameAndProceed(final String email, final String password,
+        final String nickname) {
+        activity.showLoading(true);
+        DatabaseReference nickNameRef = userService.getUserByUsername(nickname);
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    activity.showLoading(false);
+                    SignUpFragment signUpFragment =
+                        (SignUpFragment) fragMan.findFragmentByTag("signUp");
+                    signUpFragment.showResult(13);
+                    //activity.showResult(13);
+                } else {
+                    createAccount(email, password, nickname);
+                }
             }
-          }
 
-          @Override
-          public void onCancelled(DatabaseError databaseError) {
-            activity.showLoading(false);
-            activity.showInsertUsername(user);
-          }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        nickNameRef.addListenerForSingleValueEvent(eventListener);
+    }
+
+    public void createAccount(String email, String password, final String nickname) {
+        activity.showLoading(true);
+        firebaseUserService.createUserWithEmail(email, password)
+            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        processLogin(task.getResult().getUser(),
+                            task.getResult().getUser().getProviderData().get(1), nickname);
+                    } else {
+                        Log.d("Create not success", task.getException().toString());
+                        Log.d("message", task.getException().getMessage());
+                        switch (task.getException().getMessage()) {
+                            case "The email address is already in use by another account.":
+                                errorCode = 11;
+                                break;
+                            default:
+                                errorCode = 12;
+                                break;
+                        }
+                        activity.showLoading(false);
+                        activity.showLoginFail();
+                    }
+                    SignUpFragment signUpFragment =
+                        (SignUpFragment) fragMan.findFragmentByTag("signUp");
+                    signUpFragment.showResult(errorCode);
+                }
+            });
+    }
+
+    private void processLogin(FirebaseUser firebaseUser, UserInfo userInfo,
+        @Nullable String nickname) {
+        final String username;
+        final User user = User.newInstance(firebaseUser, userInfo);
+        if (TextUtils.isEmpty(userInfo.getDisplayName())) {
+            username = nickname;
+        } else {
+            username = userInfo.getDisplayName();
         }
-    );
-  }
+        userService.getUser(user.getUid()).addListenerForSingleValueEvent(
+            new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User remoteUser = dataSnapshot.getValue(User.class);
+                    if (remoteUser == null || remoteUser.getUsername() == null) {
+                        createUser(user, username);
+                    } else {
+                        activity.showLoginSuccess(remoteUser);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    activity.showLoginFail();
+                }
+            }
+        );
+    }
+
+    public void createUser(final User user, final String username) {
+        activity.showLoading(true);
+        userService.getUserByUsername(username).addListenerForSingleValueEvent(
+            new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    boolean exists = dataSnapshot.exists();
+                    if (!exists) {
+                        activity.showLoading(false);
+                        user.setUsername(username);
+                        userService.createUser(user);
+                        activity.showLoginSuccess(user);
+                    } else {
+                        activity.showLoading(false);
+                        activity.showExistUsername(user, username);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    activity.showLoading(false);
+                    activity.showInsertUsername(user);
+                }
+            }
+        );
+    }
 }

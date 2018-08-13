@@ -8,11 +8,9 @@ import android.support.annotation.Nullable;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,9 +20,7 @@ import com.mperminov.saythesame.base.BaseActivity;
 import com.mperminov.saythesame.base.BaseApplication;
 import com.mperminov.saythesame.data.model.Rival;
 import com.mperminov.saythesame.data.model.User;
-import com.mperminov.saythesame.ui.game.GameActivity;
 import com.squareup.picasso.Picasso;
-
 import javax.inject.Inject;
 
 public class MenuActivity extends BaseActivity {
@@ -53,19 +49,19 @@ public class MenuActivity extends BaseActivity {
         nickText.setText(user.getUsername());
         emailText.setText(user.getEmail());
         Picasso.get()
-                .load(user.getPhoto_url())
-                .centerCrop()
-                .resize((int) getResources().getDimension(R.dimen.avatar_width),
-                        (int) getResources().getDimension(R.dimen.avatar_height))
-                .into(avatarImage);
+            .load(user.getPhoto_url())
+            .centerCrop()
+            .resize((int) getResources().getDimension(R.dimen.avatar_width),
+                (int) getResources().getDimension(R.dimen.avatar_height))
+            .into(avatarImage);
     }
 
     @Override
     protected void setupActivityComponent() {
         BaseApplication.get(this)
-                .getUserComponent()
-                .plus(new MenuActivityModule(this))
-                .inject(this);
+            .getUserComponent()
+            .plus(new MenuActivityModule(this))
+            .inject(this);
     }
 
     public static void startWithUser(final BaseActivity activity, final User user) {
@@ -88,7 +84,7 @@ public class MenuActivity extends BaseActivity {
         // когда получили интент здесь, то берем РЕзалтРесивер и его методом send()
         // шлем реквест код и исходное активити (логин или сплеш) финиширует
         ((ResultReceiver) getIntent().getParcelableExtra("finisher")).
-                send(MenuActivity.REQUEST_COMPLETED, new Bundle());
+            send(MenuActivity.REQUEST_COMPLETED, new Bundle());
     }
 
     @OnClick(R.id.start_random_btn)
@@ -99,50 +95,11 @@ public class MenuActivity extends BaseActivity {
         //presenter.waitForStart();
     }
 
-    private void waitForStart() {
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        db.getReference()
-                .child("users")
-                .child(user.getUid())
-                .child("games").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    snapshot.getRef().orderByKey().limitToLast(1).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String rivalUid;
-                            for (DataSnapshot d : dataSnapshot.getChildren()) {
-                                if (d.getKey() != null && d.getKey().equals("id")) {
-                                    rivalUid = (String) d.getValue();
-
-                                    Rival rival = new Rival(rivalUid);
-                                    nickText.setText(rival.getUsername());
-                                    //GameActivity.startGame((BaseActivity) MenuActivity.this,rival);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     public void updateTestField(String text) {
         testTextView.setText(text);
     }
+
     public void updateNickField(String text) {
         nickText.setText(text);
     }
-
 }

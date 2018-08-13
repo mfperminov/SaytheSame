@@ -9,24 +9,23 @@ import dagger.Provides;
 
 @Module
 public class MenuActivityModule {
-  private MenuActivity activity;
-  private User user;
+    private MenuActivity activity;
+    private User user;
 
+    public MenuActivityModule(MenuActivity activity) {
+        this.activity = activity;
+    }
 
-  public MenuActivityModule(MenuActivity activity) {
-    this.activity = activity;
-  }
+    @ActivityScope
+    @Provides
+    MenuPresenter provideMenuPresenter(User user,
+        FirebaseUserService firebaseUserService, UserService userService) {
+        return new MenuPresenter(activity, user, firebaseUserService, userService);
+    }
 
-  @ActivityScope
-  @Provides
-  MenuPresenter provideMenuPresenter(User user,
-      FirebaseUserService firebaseUserService, UserService userService){
-    return new MenuPresenter(activity,user,firebaseUserService,userService);
-  }
-  @ActivityScope
-  @Provides
-  MenuActivity provideMenuActivity(){
-    return activity;
-  }
-
+    @ActivityScope
+    @Provides
+    MenuActivity provideMenuActivity() {
+        return activity;
+    }
 }

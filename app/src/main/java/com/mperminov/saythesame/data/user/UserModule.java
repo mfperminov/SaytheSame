@@ -7,15 +7,15 @@ import dagger.Provides;
 
 @Module
 public class UserModule {
-  User user;
+    User user;
 
-  public UserModule(User user) {
-    this.user = user;
-  }
+    public UserModule(User user) {
+        this.user = user;
+    }
 
-  @Provides
-  @UserScope
-  User provideUser() {
-    return user;
-  }
+    @Provides
+    @UserScope
+    User provideUser() {
+        return user;
+    }
 }

@@ -5,10 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-    setupActivityComponent();
-    super.onCreate(savedInstanceState);
-  }
+    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setupActivityComponent();
+        super.onCreate(savedInstanceState);
+    }
 
-  protected abstract void setupActivityComponent();
+    protected abstract void setupActivityComponent();
 }
