@@ -8,7 +8,9 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +25,7 @@ import com.mperminov.saythesame.ui.Login.LoginActivityModule;
 import com.mperminov.saythesame.ui.Login.LoginPresenter;
 import javax.inject.Inject;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SignInClickListener} interface
- * to handle interaction events.
- */
+
 public class SignUpFragment extends Fragment {
     //private LoginPresenter presenter;
     @Inject
@@ -48,9 +45,9 @@ public class SignUpFragment extends Fragment {
     @BindView(R.id.pswdEdTxt)
     TextInputEditText pswdEdTxt;
     @BindView(R.id.nicknameInputL)
-    TextInputLayout nickInL;
+    TextInputLayout nickInputLayout;
     @BindView(R.id.nickEdTxt)
-    TextInputEditText nickEdT;
+    TextInputEditText nickEditText;
     @BindView(R.id.proceed_sign_up)
     Button procdSignUp;
 
@@ -69,7 +66,61 @@ public class SignUpFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         ButterKnife.bind(this, view);
+        setListeners();
         return view;
+    }
+
+    private void setListeners() {
+        emailEdTxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(charSequence.toString())
+                    .matches()) {
+                    emailInL.setError("Please enter a valid e-mail");
+                } else {
+                    emailInL.setError(null);
+                }
+            }
+
+            @Override public void afterTextChanged(Editable editable) {
+            }
+        });
+        pswdEdTxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() < 6) {
+                    passwdInL.setError(
+                        "Password  shall contain at least 6 characters");
+                } else {
+                    passwdInL.setError(null);
+                }
+            }
+
+            @Override public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        nickEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.checkNickname(charSequence);
+            }
+
+            @Override public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override
@@ -99,7 +150,7 @@ public class SignUpFragment extends Fragment {
         if (checkInputSignUp()) {
             //presenter = signInClickListener.providePresenterToSignUp();
             presenter.checkNicknameAndProceed(emailEdTxt.getText().toString(),
-                pswdEdTxt.getText().toString(), nickEdT.getText().toString());
+                pswdEdTxt.getText().toString(), nickEditText.getText().toString());
         }
     }
 
@@ -118,14 +169,14 @@ public class SignUpFragment extends Fragment {
             passwdInL.setError("Please enter a correct password (minimum 6 characters)");
             isInputValid = false;
         }
-        if (TextUtils.isEmpty(nickEdT.getText().toString())) {
-            nickInL.setError("Please enter a nickname");
+        if (TextUtils.isEmpty(nickEditText.getText().toString())) {
+            nickInputLayout.setError("Please enter a nickname");
             isInputValid = false;
         }
         if (isInputValid) {
             emailInL.setError("");
             passwdInL.setError("");
-            nickInL.setError("");
+            nickInputLayout.setError("");
         }
         return isInputValid;
     }
@@ -136,15 +187,20 @@ public class SignUpFragment extends Fragment {
                 emailInL.setError("E-mail is already in use");
                 break;
             case 12:
-                emailInL.setError("Hui sosi");
-                break;
-            case 13:
-                nickInL.setError("Sorry, this nickname is already registered");
+                emailInL.setError("Authentication failed");
                 break;
             default:
-                emailInL.setError("");
-                nickInL.setError("");
+                emailInL.setError(null);
+                nickInputLayout.setError(null);
         }
+    }
+
+    public void showNicknameIsBusy() {
+        nickInputLayout.setError("Sorry, this nickname is already registered");
+    }
+
+    public void nicknameUnsetError() {
+        nickInputLayout.setError(null);
     }
 }
 

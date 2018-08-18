@@ -297,4 +297,20 @@ public class LoginPresenter implements BasePresenter {
             }
         );
     }
+
+    public void checkNickname(CharSequence charSequence) {
+        final SignUpFragment signUpFragment =
+            (SignUpFragment) fragMan.findFragmentByTag("signUp");
+        DatabaseReference dbRef = userService.getUserByUsername(charSequence.toString());
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) signUpFragment.showNicknameIsBusy();
+                else signUpFragment.nicknameUnsetError();
+            }
+
+            @Override public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

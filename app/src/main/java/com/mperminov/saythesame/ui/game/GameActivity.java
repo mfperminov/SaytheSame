@@ -44,6 +44,8 @@ public class GameActivity extends BaseActivity {
     TextView rivalThWordTV;
     @BindView(R.id.timerTv)
     TextView timerTv;
+    @BindView(R.id.matchingWordTv)
+    TextView matchingWordTv;
     @Inject
     User user;
     @Inject
@@ -61,6 +63,7 @@ public class GameActivity extends BaseActivity {
             @Override public void onClick(View view) {
                 if(!TextUtils.isEmpty(edText.getText())){
                     presenter.sendGuess(edText.getText());
+                    myLastWordTv.setText(edText.getText());
                     edText.setText("");
                     showWaitingForOtherPlayer();
                 } else {
@@ -89,7 +92,7 @@ public class GameActivity extends BaseActivity {
             .inject(this);
     }
 
-    private void shiftWords(String myWord, String rivalWord){
+    void shiftWords(String lastRivalAnswer){
         if(!TextUtils.isEmpty(mySecWordTv.getText())){
             myThWordTv.setText(mySecWordTv.getText());
             rivalThWordTV.setText(rivalSecWordTv.getText());
@@ -98,15 +101,28 @@ public class GameActivity extends BaseActivity {
             mySecWordTv.setText(myLastWordTv.getText());
             rivalSecWordTv.setText(rivalLastWordTv.getText());
         }
-        myLastWordTv.setText(myWord);
-        rivalLastWordTv.setText(rivalWord);
+        myLastWordTv.setText("");
+        rivalLastWordTv.setText(lastRivalAnswer);
     }
 
-    public void setSecondsOnTimer(long l) {
+    void updateLastRivalWord(String s){
+        rivalLastWordTv.setText(s);
+    }
+
+    void setSecondsOnTimer(long l) {
         timerTv.setText(String.valueOf(l));
     }
 
-    public void showWatingForRivalGuess() {
+    void showWatingForRivalGuess() {
         Toast.makeText(this, "Waiting for your rival to guess..", Toast.LENGTH_SHORT).show();
+    }
+
+    public void showTimeOver() {
+        Toast.makeText(this, "Time is over!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void showGameWin(String curAnswer) {
+        matchingWordTv.setText(curAnswer);
+        Toast.makeText(this, "Win", Toast.LENGTH_SHORT).show();
     }
 }

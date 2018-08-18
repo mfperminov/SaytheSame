@@ -7,7 +7,10 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +49,42 @@ public class SignInFragment extends Fragment {
         Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
         ButterKnife.bind(this, view);
+        emailEdTxtSignIn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!android.util.Patterns.EMAIL_ADDRESS.matcher(charSequence.toString())
+                    .matches()){
+                    emailInLtSignIn.setError("Please enter a valid e-mail");
+                } else {
+                    emailInLtSignIn.setError(null);
+                }
+            }
+
+            @Override public void afterTextChanged(Editable editable) {
+            }
+        });
+        pswdEdTxtSignIn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() < 6) {
+                    pswdInLtSignIn.setError(
+                        "Password  shall contain at least 6 characters");
+                } else {
+                    pswdInLtSignIn.setError(null);
+                }
+            }
+
+            @Override public void afterTextChanged(Editable editable) {
+
+            }
+        });
         return view;
     }
 
