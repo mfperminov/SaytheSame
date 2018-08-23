@@ -37,4 +37,8 @@ public class UserService {
     public void deleteUser(String key) {
 
     }
+
+    public void setMessagingToken(User user, String token){
+        databaseRef.child("users").child(user.getUid()).child("fcm_token").setValue(token);
+    }
 }

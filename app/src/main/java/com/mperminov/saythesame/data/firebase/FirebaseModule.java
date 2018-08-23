@@ -1,14 +1,18 @@
 package com.mperminov.saythesame.data.firebase;
 
 import android.app.Application;
+import com.mperminov.saythesame.data.source.remote.FireMesService;
 import com.mperminov.saythesame.data.source.remote.FirebaseUserService;
 import com.mperminov.saythesame.data.source.remote.UserService;
+import com.mperminov.saythesame.ui.menu.MenuActivity;
+import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
 
 @Module
 public class FirebaseModule {
+
     @Provides
     @Singleton
     public FirebaseUserService provideFirebaseUserService(Application application) {

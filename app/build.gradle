@@ -49,7 +49,7 @@ dependencies {
   //firebase functions
   implementation 'com.google.firebase:firebase-functions:16.1.0'
   //firebase message
-  implementation 'com.google.firebase:firebase-messaging:17.1.0'
+  implementation 'com.google.firebase:firebase-messaging:17.3.0'
   annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
   implementation 'com.android.support:design:27.1.1'
 }

@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 
 @Module
 public class AppModule {
-    // App module consist of application
     private Application application;
 
     public AppModule(Application application) {

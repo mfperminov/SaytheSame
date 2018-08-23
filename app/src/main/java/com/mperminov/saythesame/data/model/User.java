@@ -82,7 +82,7 @@ public class User {
 
     @Nullable
     public String getName() {
-        return name;
+        return username;
     }
 
     public void setName(@Nullable String name) {
