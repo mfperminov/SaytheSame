@@ -25,7 +25,6 @@ import com.mperminov.saythesame.base.BaseApplication;
 import com.mperminov.saythesame.data.model.Friend;
 import com.mperminov.saythesame.data.model.Rival;
 import com.mperminov.saythesame.data.model.User;
-import com.mperminov.saythesame.ui.Login.LoginActivity;
 import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 

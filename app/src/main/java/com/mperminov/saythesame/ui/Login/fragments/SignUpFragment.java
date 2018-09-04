@@ -34,22 +34,14 @@ public class SignUpFragment extends Fragment {
     @Inject
     FragmentManager fragMan;
 
-    @BindView(R.id.button_sign_in)
-    Button signIn;
-    @BindView(R.id.emailInputL)
-    TextInputLayout emailInL;
-    @BindView(R.id.emailEdTxt)
-    TextInputEditText emailEdTxt;
-    @BindView(R.id.pswdInputL)
-    TextInputLayout passwdInL;
-    @BindView(R.id.pswdEdTxt)
-    TextInputEditText pswdEdTxt;
-    @BindView(R.id.nicknameInputL)
-    TextInputLayout nickInputLayout;
-    @BindView(R.id.nickEdTxt)
-    TextInputEditText nickEditText;
-    @BindView(R.id.proceed_sign_up)
-    Button procdSignUp;
+    @BindView(R.id.button_sign_in) Button signIn;
+    @BindView(R.id.emailInputL) TextInputLayout emailInL;
+    @BindView(R.id.emailEdTxt) TextInputEditText emailEdTxt;
+    @BindView(R.id.pswdInputL) TextInputLayout passwdInL;
+    @BindView(R.id.pswdEdTxt) TextInputEditText pswdEdTxt;
+    @BindView(R.id.nicknameInputL) TextInputLayout nickInputLayout;
+    @BindView(R.id.nickEdTxt) TextInputEditText nickEditText;
+    @BindView(R.id.proceed_sign_up) Button procdSignUp;
 
     public SignUpFragment() {
         // Required empty public constructor

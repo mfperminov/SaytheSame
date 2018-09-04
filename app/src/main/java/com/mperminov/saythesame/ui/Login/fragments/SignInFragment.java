@@ -2,6 +2,7 @@ package com.mperminov.saythesame.ui.Login.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -10,11 +11,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,12 +26,12 @@ import javax.inject.Inject;
 
 public class SignInFragment extends Fragment {
 
-    @BindView(R.id.button_sign_up) Button signUp;
+    @BindView(R.id.button_sign_up) MaterialButton signUp;
     @BindView(R.id.emailInputLtSignIn) TextInputLayout emailInLtSignIn;
     @BindView(R.id.emailInputEdTxtSignIn) TextInputEditText emailEdTxtSignIn;
     @BindView(R.id.pswdInputLtSignIn) TextInputLayout pswdInLtSignIn;
     @BindView(R.id.pswdInputEdTxtSignIn) TextInputEditText pswdEdTxtSignIn;
-    @BindView(R.id.btnSignIn) Button btnProceedSignIn;
+    @BindView(R.id.btnSignIn) MaterialButton btnProceedSignIn;
 
     @Inject
     LoginPresenter presenter;

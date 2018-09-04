@@ -40,23 +40,20 @@
             />
     </android.support.design.widget.TextInputLayout>
 
-    <Button
+    <android.support.design.button.MaterialButton
         android:id="@+id/btnSignIn"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
         android:layout_height="wrap_content"
         android:visibility="visible"
         android:text="@string/sign_in_enter_screen"
         />
-    <TextView
-        android:id="@+id/first_time_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_time_enter_screen"
-        />
-    <Button
-        android:id="@+id/button_sign_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_up_button_label"
-        />
+  <android.support.design.button.MaterialButton
+      android:id="@+id/button_sign_up"
+      style="@style/Widget.MaterialComponents.Button.TextButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+      android:text="sign up"/>
 </LinearLayout>
