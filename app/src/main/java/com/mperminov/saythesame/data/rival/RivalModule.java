@@ -9,22 +9,22 @@ import dagger.Provides;
 
 @Module
 public class RivalModule {
-    private Rival rival;
+  private Rival rival;
 
-    public RivalModule(Rival rival) {
-        this.rival = rival;
-    }
+  public RivalModule(Rival rival) {
+    this.rival = rival;
+  }
 
-    @GameScope
-    @Provides
-    Rival provideRival() {
-        return rival;
-    }
+  @GameScope
+  @Provides
+  Rival provideRival() {
+    return rival;
+  }
 
-    @GameScope
-    @Provides
-    GameService provideGameService(User user) {
-        return new GameService(user, rival);
-    }
+  @GameScope
+  @Provides
+  GameService provideGameService(User user) {
+    return new GameService(user, rival);
+  }
 }
 

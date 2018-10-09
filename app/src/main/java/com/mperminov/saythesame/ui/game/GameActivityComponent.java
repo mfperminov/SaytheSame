@@ -10,6 +10,6 @@ import dagger.Subcomponent;
     }
 )
 public interface GameActivityComponent {
-    GameActivity inject(GameActivity activity);
+  GameActivity inject(GameActivity activity);
 }
 

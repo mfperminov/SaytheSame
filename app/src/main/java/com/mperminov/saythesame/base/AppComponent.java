@@ -17,8 +17,9 @@ import javax.inject.Singleton;
     }
 )
 public interface AppComponent {
-    LoginActivityComponent plus(LoginActivityModule activityModule);
-    void inject(FireMesService fireMesService);
+  LoginActivityComponent plus(LoginActivityModule activityModule);
 
-    UserComponent plus(UserModule userModule);
+  void inject(FireMesService fireMesService);
+
+  UserComponent plus(UserModule userModule);
 }

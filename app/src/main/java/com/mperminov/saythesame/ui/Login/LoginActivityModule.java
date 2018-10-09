@@ -9,28 +9,28 @@ import dagger.Provides;
 
 @Module
 public class LoginActivityModule {
-    private LoginActivity activity;
+  private LoginActivity activity;
 
-    public LoginActivityModule(LoginActivity activity) {
-        this.activity = activity;
-    }
+  public LoginActivityModule(LoginActivity activity) {
+    this.activity = activity;
+  }
 
-    @ActivityScope
-    @Provides
-    LoginActivity provideLoginActivity() {
-        return activity;
-    }
+  @ActivityScope
+  @Provides
+  LoginActivity provideLoginActivity() {
+    return activity;
+  }
 
-    @ActivityScope
-    @Provides
-    LoginPresenter provideLoginPresenter(FirebaseUserService firebaseUserService,
-        UserService userService) {
-        return new LoginPresenter(activity, firebaseUserService, userService);
-    }
+  @ActivityScope
+  @Provides
+  LoginPresenter provideLoginPresenter(FirebaseUserService firebaseUserService,
+      UserService userService) {
+    return new LoginPresenter(activity, firebaseUserService, userService);
+  }
 
-    @ActivityScope
-    @Provides
-    FragmentManager provideFragmentManager() {
-        return activity.getSupportFragmentManager();
-    }
+  @ActivityScope
+  @Provides
+  FragmentManager provideFragmentManager() {
+    return activity.getSupportFragmentManager();
+  }
 }

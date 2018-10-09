@@ -12,6 +12,6 @@ import dagger.Subcomponent;
     }
 )
 public interface RivalComponent {
-    GameActivityComponent plus(GameActivityModule activityModule);
+  GameActivityComponent plus(GameActivityModule activityModule);
 }
 

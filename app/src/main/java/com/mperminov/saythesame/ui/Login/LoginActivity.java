@@ -2,6 +2,7 @@ package com.mperminov.saythesame.ui.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ImageView;
@@ -23,91 +24,93 @@ import javax.inject.Inject;
 
 public class LoginActivity extends BaseActivity /*implements SignUpFragment.SignInClickListener*/ {
 
-    private static final String TAG_FB = "FACEBOOK LOGIN";
-    //for facebook login
-    private CallbackManager callbackManager;
-    @BindView(R.id.btn_google) ImageView gglBtn;
-    @BindView(R.id.btn_facebook) ImageView fcbBtn;
+  private static final String TAG_FB = "FACEBOOK LOGIN";
+  //for facebook login
+  private CallbackManager callbackManager;
+  @BindView(R.id.btn_google) ImageView gglBtn;
+  @BindView(R.id.btn_facebook) ImageView fcbBtn;
 
-    @Inject
-    LoginPresenter presenter;
+  @Inject
+  LoginPresenter presenter;
 
-    @Inject
-    FragmentManager fragMan;
+  @Inject
+  FragmentManager fragMan;
 
-    private static final int RC_SIGN_IN_GOOGLE = 9001;
+  private static final int RC_SIGN_IN_GOOGLE = 9001;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        FragmentTransaction fragmentTransaction = fragMan.beginTransaction();
-        SignUpFragment fragment = new SignUpFragment();
-        fragmentTransaction.add(R.id.fragment_container, fragment, "signUp");
-        fragmentTransaction.commit();
-        ButterKnife.bind(this);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    Debug.startMethodTracing();
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_login);
+    FragmentTransaction fragmentTransaction = fragMan.beginTransaction();
+    SignUpFragment fragment = new SignUpFragment();
+    fragmentTransaction.add(R.id.fragment_container, fragment, "signUp");
+    fragmentTransaction.commit();
+    ButterKnife.bind(this);
+  }
+
+  @Override protected void setupActivityComponent() {
+    BaseApplication.get(this).getAppComponent()
+        .plus(new LoginActivityModule(this))
+        .inject(this);
+  }
+
+  @Override
+  protected void onResume() {
+    Debug.stopMethodTracing();
+    super.onResume();
+    presenter.subscribe();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    presenter.unsubscribe();
+  }
+
+  @OnClick(R.id.btn_google)
+  public void onBtnSignWithGoogle() {
+    Intent intent = presenter.loginWithGoogle();
+    startActivityForResult(intent, RC_SIGN_IN_GOOGLE);
+  }
+
+  @OnClick(R.id.btn_facebook)
+  public void onBtnSignWithFb() {
+    callbackManager = presenter.loginWithFacebook();
+  }
+
+  public void showLoginFail() {
+    Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
+  }
+
+  public void showLoginSuccess(User user) {
+    MenuActivity.startWithUser(this, user);
+  }
+
+  public void showLoading(boolean loading) {
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    // google
+    if (requestCode == RC_SIGN_IN_GOOGLE) {
+      GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+      presenter.getAuthWithGoogle(result);
     }
-
-    @Override protected void setupActivityComponent() {
-        BaseApplication.get(this).getAppComponent()
-            .plus(new LoginActivityModule(this))
-            .inject(this);
+    // facebook
+    else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode()) {
+      callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.subscribe();
-    }
+  public void showInsertUsername(User user) {
+  }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        presenter.unsubscribe();
-    }
-
-    @OnClick(R.id.btn_google)
-    public void onBtnSignWithGoogle() {
-        Intent intent = presenter.loginWithGoogle();
-        startActivityForResult(intent, RC_SIGN_IN_GOOGLE);
-    }
-
-    @OnClick(R.id.btn_facebook)
-    public void onBtnSignWithFb() {
-        callbackManager = presenter.loginWithFacebook();
-    }
-
-    public void showLoginFail() {
-        Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
-    }
-
-    public void showLoginSuccess(User user) {
-        MenuActivity.startWithUser(this, user);
-    }
-
-    public void showLoading(boolean loading) {
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // google
-        if (requestCode == RC_SIGN_IN_GOOGLE) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            presenter.getAuthWithGoogle(result);
-        }
-        // facebook
-        else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode()) {
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    public void showInsertUsername(User user) {
-    }
-
-    public void showExistUsername(User user, String username) {
-        Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show();
-    }
+  public void showExistUsername(User user, String username) {
+    Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show();
+  }
 }
 

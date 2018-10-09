@@ -12,9 +12,9 @@ import dagger.Subcomponent;
     }
 )
 public interface LoginActivityComponent {
-    LoginActivity inject(LoginActivity activity);
+  LoginActivity inject(LoginActivity activity);
 
-    SignInFragment inject(SignInFragment sginFrag);
+  SignInFragment inject(SignInFragment sginFrag);
 
-    SignUpFragment inject(SignUpFragment sgupFrag);
+  SignUpFragment inject(SignUpFragment sgupFrag);
 }

@@ -1,7 +1,6 @@
 package com.mperminov.saythesame.ui.menu;
 
 import com.mperminov.saythesame.base.annotation.ActivityScope;
-import com.mperminov.saythesame.data.source.remote.FireMesService;
 import dagger.Subcomponent;
 
 @ActivityScope
@@ -11,5 +10,5 @@ import dagger.Subcomponent;
     }
 )
 public interface MenuActivityComponent {
-    MenuActivity inject(MenuActivity activity);
+  MenuActivity inject(MenuActivity activity);
 }

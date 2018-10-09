@@ -6,28 +6,29 @@
     android:layout_height="40dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="4dp">
+    android:paddingTop="4dp"
+    >
 
-    <ImageView
-        android:id="@+id/ivAvatar"
-        android:src="@drawable/no_avatar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        />
+  <ImageView
+      android:id="@+id/ivAvatar"
+      android:src="@drawable/no_avatar"
+      android:layout_width="36dp"
+      android:layout_height="36dp"
+      android:layout_alignParentTop="true"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentLeft="true"
+      />
 
-    <TextView
-        android:id="@+id/tvUser"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_marginLeft="8dp"
-        android:layout_toRightOf="@id/ivAvatar"
-        android:gravity="center"
-        android:textSize="14sp"
-        tools:text="Username"
-        android:layout_toEndOf="@id/ivAvatar"
-        android:layout_marginStart="8dp"
-        />
+  <TextView
+      android:id="@+id/tvUser"
+      android:layout_width="wrap_content"
+      android:layout_height="36dp"
+      android:layout_marginLeft="8dp"
+      android:layout_toRightOf="@id/ivAvatar"
+      android:gravity="center"
+      android:textSize="14sp"
+      tools:text="Username"
+      android:layout_toEndOf="@id/ivAvatar"
+      android:layout_marginStart="8dp"
+      />
 </RelativeLayout>

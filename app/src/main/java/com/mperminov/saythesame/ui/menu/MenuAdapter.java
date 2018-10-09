@@ -11,52 +11,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private MenuActivity activity;
+  private MenuActivity activity;
 
-    public MenuAdapter(MenuActivity activity) {
-        this.activity = activity;
-    }
+  public MenuAdapter(MenuActivity activity) {
+    this.activity = activity;
+  }
 
-    private final List<Friend> friends = new ArrayList<>();
-    @NonNull @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.list_item_friend, parent, false);
-        return new MenuViewHolder(itemView);
-    }
+  private final List<Friend> friends = new ArrayList<>();
 
-    @Override public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        ((MenuViewHolder)holder).bind(friends.get(position));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onUserItemClicked(position);
-            }
-        });
-    }
+  @NonNull @Override
+  public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    View itemView = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout.list_item_friend, parent, false);
+    return new MenuViewHolder(itemView, friends);
+  }
 
-    private void onUserItemClicked(int adapterPosition) {
-        activity.onUserItemClicked(friends.get(adapterPosition));
-    }
+  @Override
+  public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+    ((MenuViewHolder) holder).bind(friends.get(position));
+  }
 
-    @Override public int getItemCount() {
-        return friends.size();
-    }
-    public void onFriendAdded(Friend friend) {
-        friends.add(friend);
-        notifyItemChanged(friends.size()-1);
-    }
+  @Override public int getItemCount() {
+    return friends.size();
+  }
 
-    public Boolean checkFriendForDouble(String s) {
-        for (Friend f:friends) {
-            if(f.getUsername().equals(s))
-                return false;
-        }
-        return true;
-    }
+  public void onFriendAdded(Friend friend) {
+    friends.add(friend);
+    notifyItemChanged(friends.size() - 1);
+  }
 
-    void clearList(){
-        friends.clear();
+  public Boolean checkFriendForDouble(String s) {
+    for (Friend f : friends) {
+      if (f.getUsername().equals(s)) {
+        return false;
+      }
     }
+    return true;
+  }
 
+  void clearList() {
+    friends.clear();
+  }
 }
