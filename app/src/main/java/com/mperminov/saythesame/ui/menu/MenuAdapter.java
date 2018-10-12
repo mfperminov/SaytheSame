@@ -10,7 +10,7 @@ import com.mperminov.saythesame.data.model.Friend;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private MenuActivity activity;
 
   public MenuAdapter(MenuActivity activity) {

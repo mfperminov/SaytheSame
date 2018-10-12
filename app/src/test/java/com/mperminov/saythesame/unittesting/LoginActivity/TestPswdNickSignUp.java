@@ -102,6 +102,13 @@ public class TestPswdNickSignUp {
   }
 
   @Test
+  public void nickValidate_Exist_ReturnFalse() {
+    nickView.setText("mperm");
+    assertThat("Error - this nickname already registered", nickLayout.getError(),
+        is(notNullValue()));
+  }
+
+  @Test
   public void googleSignInButtonIsVisible() {
     assertTrue(googleButton.isShown());
   }

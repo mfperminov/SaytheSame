@@ -40,7 +40,8 @@ public class MenuPresenter implements BasePresenter {
   private FirebaseFunctions mFunctions;
   private DatabaseReference databaseRef;
   private FriendsService friendsService;
-  private ChildEventListener friedsListRef;
+  private DatabaseReference friendsListRef;
+  private ChildEventListener friendsListener;
 
   public MenuPresenter(MenuActivity activity, User user,
       FirebaseUserService firebaseUserService, UserService userService,
@@ -68,7 +69,7 @@ public class MenuPresenter implements BasePresenter {
 
   @Override
   public void unsubscribe() {
-
+    friendsListRef.removeEventListener(friendsListener);
   }
 
   public void queueUp() {
@@ -109,7 +110,7 @@ public class MenuPresenter implements BasePresenter {
         });
   }
 
-  public void waitForStart() {
+  private void waitForStart() {
     FirebaseDatabase db = FirebaseDatabase.getInstance();
     db.getReference()
         .child("users")
@@ -154,38 +155,39 @@ public class MenuPresenter implements BasePresenter {
     );
   }
 
-  public void processFriends() {
-    friedsListRef = friendsService.getFriends().addChildEventListener(
-        new ChildEventListener() {
-          @Override
-          public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Log.d("friends child", dataSnapshot.getValue().toString());
-            Friend friend = dataSnapshot.getValue(Friend.class);
-            activity.showAddedFriend(friend);
-          }
+  private void processFriends() {
+    friendsListRef = friendsService.getFriends();
+    friendsListener = new ChildEventListener() {
+      @Override
+      public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        Log.d("friends child", dataSnapshot.getValue().toString());
+        Friend friend = dataSnapshot.getValue(Friend.class);
+        activity.showAddedFriend(friend);
+      }
 
-          @Override
-          public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            Friend friend = dataSnapshot.getValue(Friend.class);
-            activity.showChangedFriend(friend);
-          }
+      @Override
+      public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        Friend friend = dataSnapshot.getValue(Friend.class);
+        activity.showChangedFriend(friend);
+      }
 
-          @Override
-          public void onChildRemoved(DataSnapshot dataSnapshot) {
-            // TODO : remove
-          }
+      @Override
+      public void onChildRemoved(DataSnapshot dataSnapshot) {
+        // TODO : remove
+      }
 
-          @Override
-          public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            // TODO : moved
-          }
+      @Override
+      public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+        // TODO : moved
+      }
 
-          @Override
-          public void onCancelled(DatabaseError databaseError) {
-            // TODO : cancel
-          }
-        }
-    );
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+        // TODO : cancel
+      }
+    };
+
+    friendsListRef.addChildEventListener(friendsListener);
   }
 
   public void setFriend(final String username) {
@@ -268,9 +270,14 @@ public class MenuPresenter implements BasePresenter {
   }
 
   public void logout() {
-    firebaseUserService.logOut(activity, user.getProvider());
-    activity.startActivity(new Intent(activity, LoginActivity.class));
-    activity.finish();
+    if (user.getProvider().equals("facebook.com") || user.getProvider().equals("google.com")) {
+      firebaseUserService.logOut(activity, user.getProvider());
+    } else {
+      firebaseAuth.signOut();
+      activity.startActivity(new Intent(activity, LoginActivity.class));
+      activity.finish();
+    }
+
   }
 }
 

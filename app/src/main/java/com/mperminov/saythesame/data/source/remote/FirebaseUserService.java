@@ -87,41 +87,45 @@ public class FirebaseUserService {
   }
 
   public void logOut(final BaseActivity activity, String provider) {
-    if (provider.equals("facebook.com")) {
-      firebaseAuth.signOut();
-      LoginManager.getInstance().logOut();
-    } else if (provider.equals("google.com")) {
-      googleApiClient.connect();
-      googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-        @Override
-        public void onConnected(@Nullable Bundle bundle) {
-          firebaseAuth.signOut();
-          if (googleApiClient.isConnected()) {
-            Auth.GoogleSignInApi.signOut(googleApiClient)
-                .setResultCallback(new ResultCallback<Status>() {
-                  @Override
-                  public void onResult(@NonNull Status status) {
-                    if (status.isSuccess()) {
-                      Log.d("google logout", "User Logged out");
-                      Intent intent = new Intent(activity, LoginActivity.class);
-                      activity.startActivity(intent);
-                      activity.finish();
+    switch (provider) {
+      case "facebook.com":
+        firebaseAuth.signOut();
+        LoginManager.getInstance().logOut();
+        activity.startActivity(new Intent(activity, LoginActivity.class));
+        activity.finish();
+        break;
+      case "google.com":
+        googleApiClient.connect();
+        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+          @Override
+          public void onConnected(@Nullable Bundle bundle) {
+            firebaseAuth.signOut();
+            if (googleApiClient.isConnected()) {
+              Auth.GoogleSignInApi.signOut(googleApiClient)
+                  .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                      if (status.isSuccess()) {
+                        Log.d("google logout", "User Logged out");
+                        Intent intent = new Intent(activity, LoginActivity.class);
+                        activity.startActivity(intent);
+                        activity.finish();
+                      }
                     }
-                  }
-                });
-          }
-        }
+                  });
+            }
 
-        @Override
-        public void onConnectionSuspended(int i) {
-          Log.d("Google logout", "Google API Client Connection Suspended");
-        }
-      });
-    } else {
-      firebaseAuth.signOut();
-      Intent intent = new Intent(activity, LoginActivity.class);
-      activity.startActivity(intent);
-      activity.finish();
+          }
+
+          @Override
+          public void onConnectionSuspended(int i) {
+            Log.d("Google logout", "Google API Client Connection Suspended");
+          }
+        });
+        break;
+      default:
+        firebaseAuth.signOut();
+        break;
     }
   }
 

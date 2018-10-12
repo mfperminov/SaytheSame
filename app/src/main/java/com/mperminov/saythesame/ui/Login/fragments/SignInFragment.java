@@ -136,6 +136,6 @@ public class SignInFragment extends Fragment {
   @Override
   public void onDetach() {
     super.onDetach();
-    //signUpClickListener = null;
+    //signUpClickListener = null;Н
   }
 }

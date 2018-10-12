@@ -1,18 +1,20 @@
 package com.mperminov.saythesame.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 
-public class User {
-  @NonNull String uid;
-  @Nullable String username;
-  @Nullable String email;
+public class User implements Parcelable {
+  @NonNull private String uid;
+  @Nullable private String username;
+  @Nullable private String email;
   @VisibleForTesting
-  @Nullable String password;
-  @Nullable String provider;
+  @Nullable private String password;
+  @Nullable private String provider;
   @Nullable String photo_url;
   @Nullable String name;
 
@@ -67,7 +69,7 @@ public class User {
     return email;
   }
 
-  public void setEmail(@Nullable String email) {
+  private void setEmail(@Nullable String email) {
     this.email = email;
   }
 
@@ -85,7 +87,7 @@ public class User {
     return username;
   }
 
-  public void setName(@Nullable String name) {
+  private void setName(@Nullable String name) {
     this.name = name;
   }
 
@@ -94,7 +96,7 @@ public class User {
     return provider;
   }
 
-  public void setProvider(@Nullable String provider) {
+  private void setProvider(@Nullable String provider) {
     this.provider = provider;
   }
 
@@ -106,5 +108,44 @@ public class User {
   public void setUsername(String nickname) {
     this.username = nickname;
   }
+
+  protected User(Parcel in) {
+    uid = in.readString();
+    username = in.readString();
+    email = in.readString();
+    password = in.readString();
+    provider = in.readString();
+    photo_url = in.readString();
+    name = in.readString();
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(uid);
+    dest.writeString(username);
+    dest.writeString(email);
+    dest.writeString(password);
+    dest.writeString(provider);
+    dest.writeString(photo_url);
+    dest.writeString(name);
+  }
+
+  @SuppressWarnings("unused")
+  public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+    @Override
+    public User createFromParcel(Parcel in) {
+      return new User(in);
+    }
+
+    @Override
+    public User[] newArray(int size) {
+      return new User[size];
+    }
+  };
 }
 

@@ -3,8 +3,8 @@ package com.mperminov.saythesame.data.model;
 import android.support.annotation.NonNull;
 
 public class Friend {
-  @NonNull String username;
-  String photo_url;
+  @NonNull private String username;
+  private String photo_url;
 
   public Friend() {
   }

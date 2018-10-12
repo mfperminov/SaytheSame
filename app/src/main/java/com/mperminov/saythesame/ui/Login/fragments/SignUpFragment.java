@@ -2,6 +2,7 @@ package com.mperminov.saythesame.ui.Login.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -26,7 +27,7 @@ import com.mperminov.saythesame.ui.Login.LoginPresenter;
 import javax.inject.Inject;
 
 public class SignUpFragment extends Fragment {
-  //private LoginPresenter presenter;
+  private static final int MS_WAIT_BEFORE_ERROR_SHOWN = 400;
   @Inject
   LoginPresenter presenter;
 
@@ -104,17 +105,20 @@ public class SignUpFragment extends Fragment {
 
       }
 
-      @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+      @Override public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
         if (TextUtils.isEmpty(charSequence)) {
-          nickInputLayout.setError("PLease enter a nickname");
+          nickInputLayout.setError("Please enter a nickname");
         } else {
           nickInputLayout.setError("");
-          presenter.checkNickname(charSequence);
+          new Handler().postDelayed(new Runnable(){
+            public void run(){
+              presenter.checkNickname(charSequence);
+            }},MS_WAIT_BEFORE_ERROR_SHOWN);
+
         }
       }
 
       @Override public void afterTextChanged(Editable editable) {
-
       }
     });
   }
@@ -143,61 +147,34 @@ public class SignUpFragment extends Fragment {
 
   @OnClick(R.id.proceed_sign_up)
   public void onBtnProceedSignUp() {
-    if (checkInputSignUp()) {
-      //presenter = signInClickListener.providePresenterToSignUp();
-      presenter.checkNicknameAndProceed(emailEditText.getText().toString(),
-          passwordEditText.getText().toString(), nickEditText.getText().toString());
-    }
+    Handler handler = new Handler();
+    handler.postDelayed(new Runnable() {
+      public void run() {
+        if (checkInputSignUp()) {
+          presenter.checkNicknameAndProceed(emailEditText.getText().toString(),
+              passwordEditText.getText().toString(), nickEditText.getText().toString());
+        }
+      }
+    }, 500);
+
   }
+
 
   //check that forms are filled correctly
-  //don't need to use db or much resource
   private boolean checkInputSignUp() {
-    Boolean isInputValid = true;
-    if (TextUtils.isEmpty(emailEditText.getText().toString()) ||
-        !android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText().toString())
-            .matches()) {
-      emailInputLayout.setError("Please enter a valid e-mail");
-      isInputValid = false;
-    }
-    if (TextUtils.isEmpty(passwordEditText.getText().toString())
-        || (passwordEditText.getText().toString().length() < 6)) {
-      passwordInputLayout.setError("Please enter a correct password (minimum 6 characters)");
-      isInputValid = false;
-    }
-    if (TextUtils.isEmpty(nickEditText.getText().toString())) {
-      nickInputLayout.setError("Please enter a nickname");
-      isInputValid = false;
-    }
-    if (isInputValid) {
-      emailInputLayout.setError("");
-      passwordInputLayout.setError("");
-      nickInputLayout.setError("");
-    }
-    return isInputValid;
+    return TextUtils.isEmpty(emailInputLayout.getError())
+        && TextUtils.isEmpty(passwordInputLayout.getError())
+        && TextUtils.isEmpty(nickInputLayout.getError());
   }
 
-  public void showResult(int errorCode) {
-    switch (errorCode) {
-      case 11:
-        emailInputLayout.setError("E-mail is already in use");
-        break;
-      case 12:
-        emailInputLayout.setError("Authentication failed");
-        break;
-      default:
-        emailInputLayout.setError(null);
-        nickInputLayout.setError(null);
-    }
+  public void showErrorEmail(@Nullable String errorMessage) {
+    emailInputLayout.setError(errorMessage);
   }
 
-  public void showNicknameIsBusy() {
-    nickInputLayout.setError("Sorry, this nickname is already registered");
+  public void showErrorNickname(@Nullable String errorMessage) {
+    nickInputLayout.setError(errorMessage);
   }
 
-  public void nicknameUnsetError() {
-    nickInputLayout.setError(null);
-  }
 }
 
 

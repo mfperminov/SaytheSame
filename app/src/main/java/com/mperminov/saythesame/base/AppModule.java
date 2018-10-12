@@ -5,8 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
 
-@Module
-public class AppModule {
+@Module class AppModule {
   private Application application;
 
   public AppModule(Application application) {

@@ -28,7 +28,7 @@ public class GameActivity extends BaseActivity {
   @BindView(R.id.button_send) ImageButton btnSend;
   @BindView(R.id.myLastWordTv) TextView myLastWordTv;
   @BindView(R.id.rivalLastWordTv) TextView rivalLastWordTv;
-  @BindView(R.id.myWord2Tv) TextView mySecWordTv;
+  @BindView(R.id.myWord2Tv)  TextView mySecWordTv;
   @BindView(R.id.rivalWord2Tv) TextView rivalSecWordTv;
   @BindView(R.id.myWord3Tv) TextView myThWordTv;
   @BindView(R.id.rivalWord3Tv) TextView rivalThWordTV;

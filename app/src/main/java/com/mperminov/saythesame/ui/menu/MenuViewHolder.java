@@ -12,7 +12,7 @@ import com.mperminov.saythesame.data.model.Friend;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
-public class MenuViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+class MenuViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
   @BindView(R.id.ivAvatar)
   ImageView avatarImageView;
   @BindView(R.id.tvUser)

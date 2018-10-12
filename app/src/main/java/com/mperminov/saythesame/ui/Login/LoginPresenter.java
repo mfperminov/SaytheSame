@@ -33,18 +33,17 @@ import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
 import java.util.Arrays;
 
 public class LoginPresenter implements BasePresenter {
-  int errorCode = 0;
   private LoginActivity activity;
   private FirebaseUserService firebaseUserService;
   private UserService userService;
-  private FragmentManager fragMan;
+  private FragmentManager fragmentManager;
 
   public LoginPresenter(LoginActivity activity, FirebaseUserService firebaseUserService,
       UserService userService) {
     this.activity = activity;
     this.firebaseUserService = firebaseUserService;
     this.userService = userService;
-    fragMan = this.activity.getSupportFragmentManager();
+    fragmentManager = this.activity.getSupportFragmentManager();
   }
 
   @Override public void subscribe() {
@@ -55,8 +54,8 @@ public class LoginPresenter implements BasePresenter {
 
   }
 
-  protected CallbackManager loginWithFacebook() {
-    //create a callback manager
+  CallbackManager loginWithFacebook() {
+
     CallbackManager callbackManager = firebaseUserService.getUserWithFacebook();
     LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("email",
         "public_profile"));
@@ -65,7 +64,6 @@ public class LoginPresenter implements BasePresenter {
           @Override
           public void onSuccess(LoginResult loginResult) {
             getAuthWithFacebook(loginResult.getAccessToken());
-            Log.d("mperminov", "facebook login succesful");
           }
 
           @Override
@@ -76,7 +74,6 @@ public class LoginPresenter implements BasePresenter {
           @Override
           public void onError(FacebookException error) {
             activity.showLoginFail();
-            Log.d("FB error", error.toString());
             if (error instanceof FacebookAuthorizationException) {
               if (AccessToken.getCurrentAccessToken() != null) {
                 LoginManager.getInstance().logOut();
@@ -96,13 +93,7 @@ public class LoginPresenter implements BasePresenter {
             if (task.isSuccessful()) {
               activity.showLoading(false);
               for (UserInfo profile : task.getResult().getUser().getProviderData()) {
-                String providerId = profile.getProviderId();
-                String uid = profile.getUid();
-                String name = profile.getDisplayName();
-                String email = profile.getEmail();
-                Uri photoUri = profile.getPhotoUrl();
-                Log.d("New user:",
-                    providerId + " " + uid + " " + name + " " + email + " " + photoUri);
+                debugUserValues(profile);
               }
               processLogin(task.getResult().getUser(),
                   task.getResult().getUser().getProviderData().get(1), null);
@@ -130,21 +121,7 @@ public class LoginPresenter implements BasePresenter {
               if (task.isSuccessful()) {
                 activity.showLoading(false);
                 for (UserInfo profile : task.getResult().getUser().getProviderData()) {
-                  String providerId = profile.getProviderId();
-                  String uid = profile.getUid();
-                  String name = profile.getDisplayName();
-                  String email = profile.getEmail();
-                  Uri photoUri = profile.getPhotoUrl();
-                  Log.d("New user:",
-                      providerId
-                          + " "
-                          + uid
-                          + " "
-                          + name
-                          + " "
-                          + email
-                          + " "
-                          + photoUri);
+                  debugUserValues(profile);
                 }
                 processLogin(task.getResult().getUser(),
                     task.getResult().getUser().getProviderData().get(1), null);
@@ -159,6 +136,24 @@ public class LoginPresenter implements BasePresenter {
     }
   }
 
+  private void debugUserValues(UserInfo profile) {
+    String providerId = profile.getProviderId();
+    String uid = profile.getUid();
+    String name = profile.getDisplayName();
+    String email = profile.getEmail();
+    Uri photoUri = profile.getPhotoUrl();
+    Log.d("New user:",
+        providerId
+            + " "
+            + uid
+            + " "
+            + name
+            + " "
+            + email
+            + " "
+            + photoUri);
+  }
+
   public void loginWithEmail(final String email, final String password) {
     activity.showLoading(true);
     firebaseUserService.getUserWithEmail(email, password)
@@ -168,13 +163,7 @@ public class LoginPresenter implements BasePresenter {
             if (task.isSuccessful()) {
               activity.showLoading(false);
               for (UserInfo profile : task.getResult().getUser().getProviderData()) {
-                String providerId = profile.getProviderId();
-                String uid = profile.getUid();
-                String name = profile.getDisplayName();
-                String email = profile.getEmail();
-                Uri photoUri = profile.getPhotoUrl();
-                Log.d("User logged",
-                    providerId + " " + uid + " " + name + " " + email + " " + photoUri);
+                debugUserValues(profile);
               }
               processLogin(task.getResult().getUser(),
                   task.getResult().getUser().getProviderData().get(1),
@@ -197,9 +186,9 @@ public class LoginPresenter implements BasePresenter {
         if (dataSnapshot.exists()) {
           activity.showLoading(false);
           SignUpFragment signUpFragment =
-              (SignUpFragment) fragMan.findFragmentByTag("signUp");
-          signUpFragment.showResult(13);
-          //activity.showResult(13);
+              (SignUpFragment) fragmentManager.findFragmentByTag("signUp");
+          signUpFragment.showErrorNickname("User with this username already exist");
+          //activity.showErrorEmail(13);
         } else {
           createAccount(email, password, nickname);
         }
@@ -212,7 +201,7 @@ public class LoginPresenter implements BasePresenter {
     nickNameRef.addListenerForSingleValueEvent(eventListener);
   }
 
-  public void createAccount(String email, String password, final String nickname) {
+  private void createAccount(String email, String password, final String nickname) {
     activity.showLoading(true);
     firebaseUserService.createUserWithEmail(email, password)
         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -224,20 +213,12 @@ public class LoginPresenter implements BasePresenter {
             } else {
               Log.d("Create not success", task.getException().toString());
               Log.d("message", task.getException().getMessage());
-              switch (task.getException().getMessage()) {
-                case "The email address is already in use by another account.":
-                  errorCode = 11;
-                  break;
-                default:
-                  errorCode = 12;
-                  break;
-              }
               activity.showLoading(false);
               activity.showLoginFail();
+              SignUpFragment signUpFragment =
+                  (SignUpFragment) fragmentManager.findFragmentByTag("signUp");
+              signUpFragment.showErrorEmail(task.getException().getLocalizedMessage());
             }
-            SignUpFragment signUpFragment =
-                (SignUpFragment) fragMan.findFragmentByTag("signUp");
-            signUpFragment.showResult(errorCode);
           }
         });
   }
@@ -271,14 +252,13 @@ public class LoginPresenter implements BasePresenter {
     );
   }
 
-  public void createUser(final User user, final String username) {
+  private void createUser(final User user, final String username) {
     activity.showLoading(true);
     userService.getUserByUsername(username).addListenerForSingleValueEvent(
         new ValueEventListener() {
           @Override
           public void onDataChange(DataSnapshot dataSnapshot) {
-            boolean exists = dataSnapshot.exists();
-            if (!exists) {
+            if (!dataSnapshot.exists()) {
               activity.showLoading(false);
               user.setUsername(username);
               userService.createUser(user);
@@ -300,14 +280,14 @@ public class LoginPresenter implements BasePresenter {
 
   public void checkNickname(CharSequence charSequence) {
     final SignUpFragment signUpFragment =
-        (SignUpFragment) fragMan.findFragmentByTag("signUp");
+        (SignUpFragment) fragmentManager.findFragmentByTag("signUp");
     DatabaseReference dbRef = userService.getUserByUsername(charSequence.toString());
     dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
       @Override public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
           if (dataSnapshot.exists()) {
-              signUpFragment.showNicknameIsBusy();
+              signUpFragment.showErrorNickname("Username is already registered");
           } else {
-              signUpFragment.nicknameUnsetError();
+              signUpFragment.showErrorNickname(null);
           }
       }
 

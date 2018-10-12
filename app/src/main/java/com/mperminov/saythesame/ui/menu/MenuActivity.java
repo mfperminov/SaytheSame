@@ -3,7 +3,6 @@ package com.mperminov.saythesame.ui.menu;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,7 +58,11 @@ public class MenuActivity extends BaseActivity {
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+
     super.onCreate(savedInstanceState);
+
+
     setContentView(R.layout.activity_menu);
     ButterKnife.bind(this);
     nickText.setText(user.getUsername());
@@ -77,6 +80,11 @@ public class MenuActivity extends BaseActivity {
   protected void onResume() {
     super.onResume();
     presenter.subscribe();
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    presenter.unsubscribe();
   }
 
   @Override protected void onStop() {
@@ -114,26 +122,35 @@ public class MenuActivity extends BaseActivity {
   }
 
   public static void startWithUser(final BaseActivity activity, final User user) {
-    //переход из активити ( возможно логин - возможно сплеш активити )
+
     Intent intent = new Intent(activity, MenuActivity.class);
-    // в интент кладется резльтат рецивер, т.е. когда активити из которого мы уйдем
-    // получит резльутат, то оно финиширует
-    intent.putExtra("finisher", new ResultReceiver(null) {
-      @Override
-      protected void onReceiveResult(int resultCode, Bundle resultData) {
-        activity.finish();
-      }
-    });
+
+    //ResultReceiver rr = new ResultReceiver(null) {
+    //  @Override protected void onReceiveResult(int resultCode, Bundle resultData) {
+    //    activity.finish();
+    //
+    //  }
+    //};
+    //intent.putExtra("finisher", new ResultReceiver(null) {
+    //  @Override
+    //  protected void onReceiveResult(int resultCode, Bundle resultData) {
+    //    activity.finish();
+    //  }
+    //});
+    //intent.putExtra("finisher", rr);
     BaseApplication.get(activity).createUserComponent(user);
-    // стартуем интент (ИЗ СЛПЕШ АКТИВИТИ ИЛИ ЛОГИН АКТИВИТИ)
     activity.startActivityForResult(intent, REQUEST_COMPLETED);
+
   }
 
   public void sendMessageToBreakPreviousScreen() {
     // когда получили интент здесь, то берем РЕзалтРесивер и его методом send()
     // шлем реквест код и исходное активити (логин или сплеш) финиширует
-    ((ResultReceiver) getIntent().getParcelableExtra("finisher")).
-        send(MenuActivity.REQUEST_COMPLETED, new Bundle());
+    //((ResultReceiver) getIntent().getParcelableExtra("finisher")).
+    //    send(MenuActivity.REQUEST_COMPLETED, new Bundle());
+    Intent intent = new Intent();
+    setResult(REQUEST_COMPLETED, intent);
+
   }
 
   @OnClick(R.id.start_random_btn)

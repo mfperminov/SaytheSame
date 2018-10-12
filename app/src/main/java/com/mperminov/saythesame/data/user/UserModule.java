@@ -8,7 +8,7 @@ import dagger.Provides;
 
 @Module
 public class UserModule {
-  User user;
+  private User user;
 
   public UserModule(User user) {
     this.user = user;

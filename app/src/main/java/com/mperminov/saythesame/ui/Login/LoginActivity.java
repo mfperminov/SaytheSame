@@ -22,28 +22,24 @@ import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
 import com.mperminov.saythesame.ui.menu.MenuActivity;
 import javax.inject.Inject;
 
-public class LoginActivity extends BaseActivity /*implements SignUpFragment.SignInClickListener*/ {
-
-  private static final String TAG_FB = "FACEBOOK LOGIN";
-  //for facebook login
-  private CallbackManager callbackManager;
-  @BindView(R.id.btn_google) ImageView gglBtn;
-  @BindView(R.id.btn_facebook) ImageView fcbBtn;
-
-  @Inject
-  LoginPresenter presenter;
-
-  @Inject
-  FragmentManager fragMan;
+public class LoginActivity extends BaseActivity {
 
   private static final int RC_SIGN_IN_GOOGLE = 9001;
+  @BindView(R.id.btn_google) ImageView gglBtn;
+  @BindView(R.id.btn_facebook) ImageView fcbBtn;
+  @Inject
+  LoginPresenter presenter;
+  @Inject
+  FragmentManager fragmentManager;
+  //for facebook login
+  private CallbackManager callbackManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     Debug.startMethodTracing();
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
-    FragmentTransaction fragmentTransaction = fragMan.beginTransaction();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
     SignUpFragment fragment = new SignUpFragment();
     fragmentTransaction.add(R.id.fragment_container, fragment, "signUp");
     fragmentTransaction.commit();
@@ -81,7 +77,8 @@ public class LoginActivity extends BaseActivity /*implements SignUpFragment.Sign
   }
 
   public void showLoginFail() {
-    Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
+    Toast.makeText(this,
+        "Login Failed", Toast.LENGTH_LONG).show();
   }
 
   public void showLoginSuccess(User user) {
@@ -103,7 +100,7 @@ public class LoginActivity extends BaseActivity /*implements SignUpFragment.Sign
     // facebook
     else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode()) {
       callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
+    } else if (requestCode == MenuActivity.REQUEST_COMPLETED) finish();
   }
 
   public void showInsertUsername(User user) {
