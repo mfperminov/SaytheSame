@@ -77,8 +77,7 @@ public class LoginActivity extends BaseActivity {
   }
 
   public void showLoginFail() {
-    Toast.makeText(this,
-        "Login Failed", Toast.LENGTH_LONG).show();
+    Toast.makeText(this,"Login Failed", Toast.LENGTH_LONG).show();
   }
 
   public void showLoginSuccess(User user) {

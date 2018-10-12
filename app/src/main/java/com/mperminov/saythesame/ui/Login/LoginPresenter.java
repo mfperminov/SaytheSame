@@ -176,32 +176,7 @@ public class LoginPresenter implements BasePresenter {
         });
   }
 
-  public void checkNicknameAndProceed(final String email, final String password,
-      final String nickname) {
-    activity.showLoading(true);
-    DatabaseReference nickNameRef = userService.getUserByUsername(nickname);
-    ValueEventListener eventListener = new ValueEventListener() {
-      @Override
-      public void onDataChange(DataSnapshot dataSnapshot) {
-        if (dataSnapshot.exists()) {
-          activity.showLoading(false);
-          SignUpFragment signUpFragment =
-              (SignUpFragment) fragmentManager.findFragmentByTag("signUp");
-          signUpFragment.showErrorNickname("User with this username already exist");
-          //activity.showErrorEmail(13);
-        } else {
-          createAccount(email, password, nickname);
-        }
-      }
-
-      @Override
-      public void onCancelled(DatabaseError databaseError) {
-      }
-    };
-    nickNameRef.addListenerForSingleValueEvent(eventListener);
-  }
-
-  private void createAccount(String email, String password, final String nickname) {
+  public void createAccount(String email, String password, final String nickname) {
     activity.showLoading(true);
     firebaseUserService.createUserWithEmail(email, password)
         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

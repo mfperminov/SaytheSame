@@ -24,6 +24,7 @@ import com.mperminov.saythesame.base.BaseApplication;
 import com.mperminov.saythesame.ui.Login.LoginActivity;
 import com.mperminov.saythesame.ui.Login.LoginActivityModule;
 import com.mperminov.saythesame.ui.Login.LoginPresenter;
+import com.mperminov.saythesame.ui.Login.LoginTextWatcher;
 import javax.inject.Inject;
 
 public class SignUpFragment extends Fragment {
@@ -63,42 +64,18 @@ public class SignUpFragment extends Fragment {
   }
 
   private void setListeners() {
-    emailEditText.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-      }
+    // e-mail filed
+    LoginTextWatcher emailTextWatcher = new LoginTextWatcher(emailInputLayout,
+        "Please enter a valid e-mail",
+        it -> !android.util.Patterns.EMAIL_ADDRESS.matcher(it.toString()).matches());
+    emailEditText.addTextChangedListener(emailTextWatcher);
 
-      @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(charSequence.toString())
-            .matches()) {
-          emailInputLayout.setError("Please enter a valid e-mail");
-        } else {
-          emailInputLayout.setError(null);
-        }
-      }
+    // password field
+    LoginTextWatcher passwordTextWatcher = new LoginTextWatcher(passwordInputLayout,
+        "Password  shall contain at least 6 characters",it -> it.length() < 6);
+    passwordEditText.addTextChangedListener(passwordTextWatcher);
 
-      @Override public void afterTextChanged(Editable editable) {
-      }
-    });
-    passwordEditText.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-      }
-
-      @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if (charSequence.length() < 6) {
-          passwordInputLayout.setError(
-              "Password  shall contain at least 6 characters");
-        } else {
-          passwordInputLayout.setError(null);
-        }
-      }
-
-      @Override public void afterTextChanged(Editable editable) {
-
-      }
-    });
     nickEditText.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -151,7 +128,7 @@ public class SignUpFragment extends Fragment {
     handler.postDelayed(new Runnable() {
       public void run() {
         if (checkInputSignUp()) {
-          presenter.checkNicknameAndProceed(emailEditText.getText().toString(),
+          presenter.createAccount(emailEditText.getText().toString(),
               passwordEditText.getText().toString(), nickEditText.getText().toString());
         }
       }
