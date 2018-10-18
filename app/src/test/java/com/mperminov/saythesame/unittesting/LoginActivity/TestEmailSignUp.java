@@ -32,8 +32,8 @@ public class TestEmailSignUp {
     FragmentManager fragmentManager = activity.getSupportFragmentManager();
     SignUpFragment signUpFragment = (SignUpFragment) fragmentManager
         .findFragmentById(R.id.fragment_container);
-    emailView = signUpFragment.getView().findViewById(R.id.emailEdTxt);
-    emailLayout = signUpFragment.getView().findViewById(R.id.emailInputL);
+    emailView = signUpFragment.getView().findViewById(R.id.su_et_email);
+    emailLayout = signUpFragment.getView().findViewById(R.id.su_til_email);
   }
 
   @Test

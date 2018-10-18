@@ -17,4 +17,5 @@ public interface LoginActivityComponent {
   SignInFragment inject(SignInFragment sginFrag);
 
   SignUpFragment inject(SignUpFragment sgupFrag);
+
 }

@@ -36,8 +36,8 @@ public class TestEmailSignIn {
     transaction.replace(R.id.fragment_container, signInFragment);
     transaction.addToBackStack(null);
     transaction.commit();
-    emailView = signInFragment.getView().findViewById(R.id.emailInputEdTxtSignIn);
-    emailLayout = signInFragment.getView().findViewById(R.id.emailInputLtSignIn);
+    emailView = signInFragment.getView().findViewById(R.id.si_et_email);
+    emailLayout = signInFragment.getView().findViewById(R.id.si_til_email);
   }
 
   @Test

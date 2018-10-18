@@ -9,7 +9,6 @@ import com.mperminov.saythesame.data.rival.RivalComponent;
 import com.mperminov.saythesame.data.rival.RivalModule;
 import com.mperminov.saythesame.data.user.UserComponent;
 import com.mperminov.saythesame.data.user.UserModule;
-import com.squareup.leakcanary.LeakCanary;
 
 public class BaseApplication extends Application {
   private AppComponent appComponent;
@@ -23,12 +22,12 @@ public class BaseApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    if (LeakCanary.isInAnalyzerProcess(this)) {
-      // This process is dedicated to LeakCanary for heap analysis.
-      // You should not init your app in this process.
-      return;
-    }
-    LeakCanary.install(this);
+    //if (LeakCanary.isInAnalyzerProcess(this)) {
+    //  // This process is dedicated to LeakCanary for heap analysis.
+    //  // You should not init your app in this process.
+    //  return;
+    //}
+    //LeakCanary.install(this);
     initAppComponent();
   }
 

@@ -5,9 +5,10 @@ import android.text.Editable
 import android.text.TextWatcher
 
 class LoginTextWatcher(
-  private val inputLayout: TextInputLayout, private val errorMessage: String,
-  val predicate: (CharSequence?) -> Boolean) : TextWatcher {
-
+  private val inputLayout: TextInputLayout,
+  private val errorMessage: String,
+  val predicate: (CharSequence?) -> Boolean
+) : TextWatcher {
 
   override fun afterTextChanged(p0: Editable?) {
   }
@@ -26,6 +27,7 @@ class LoginTextWatcher(
     p2: Int,
     p3: Int
   ) {
-    if(predicate(cs)) inputLayout.error = errorMessage else inputLayout.error = null
+    if (predicate(cs)) inputLayout.error = errorMessage else
+      inputLayout.error = null
   }
 }

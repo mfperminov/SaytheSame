@@ -39,11 +39,11 @@ public class TestPswdNickSignUp {
     SignUpFragment signUpFragment = (SignUpFragment) fragmentManager
         .findFragmentById(R.id.fragment_container);
     //input for password (on sign up)
-    pswdView = signUpFragment.getView().findViewById(R.id.pswdEdTxt);
-    pswdLayout = signUpFragment.getView().findViewById(R.id.pswdInputL);
+    pswdView = signUpFragment.getView().findViewById(R.id.su_et_password);
+    pswdLayout = signUpFragment.getView().findViewById(R.id.su_til_password);
     //input for nickname
-    nickView = signUpFragment.getView().findViewById(R.id.nickEdTxt);
-    nickLayout = signUpFragment.getView().findViewById(R.id.nicknameInputL);
+    nickView = signUpFragment.getView().findViewById(R.id.su_et_nick);
+    nickLayout = signUpFragment.getView().findViewById(R.id.su_til_nick);
     // third party auth
     googleButton = activity.findViewById(R.id.btn_google);
     facebookButton = activity.findViewById(R.id.btn_facebook);

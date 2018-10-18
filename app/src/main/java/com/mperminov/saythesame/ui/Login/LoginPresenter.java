@@ -30,6 +30,7 @@ import com.mperminov.saythesame.data.model.User;
 import com.mperminov.saythesame.data.source.remote.FirebaseUserService;
 import com.mperminov.saythesame.data.source.remote.UserService;
 import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
+import io.reactivex.functions.Predicate;
 import java.util.Arrays;
 
 public class LoginPresenter implements BasePresenter {
@@ -271,4 +272,25 @@ public class LoginPresenter implements BasePresenter {
       }
     });
   }
+  //public boolean isNicknameBusyRx(CharSequence charSequence) {
+  //
+  //  DatabaseReference usernameReference = userService.getUserByUsername(charSequence.toString());
+  //  usernameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+  //    @Override public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+  //        if (dataSnapshot.exists()) {
+  //            busy[0] = true;
+  //        } else {
+  //            busy[0] = false;
+  //        }
+  //    }
+  //
+  //    @Override public void onCancelled(@NonNull DatabaseError databaseError) {
+  //
+  //    }
+  //  });
+  //  return busy[0];
+  //}
+
+  Predicate<DataSnapshot> isSnapshotExist = dataSnapshot -> dataSnapshot.exists();
+
 }

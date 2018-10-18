@@ -97,7 +97,10 @@
   <string name="fb_login_protocol_scheme">fb2136100249951686</string>
   <string name="hint_text_sign_up_email">e-mail</string>
 
-  <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="menu_player_avatar_desc">Avatar of the player</string>
+  <!-- Errors oof LoginActivity -->
+  <string name="empty_email">Please enter an e-mail</string>
+  <string name="empty_password">Please enter a password</string>
+  <string name="empty_nickname">Please enter a nickname</string>
 </resources>
