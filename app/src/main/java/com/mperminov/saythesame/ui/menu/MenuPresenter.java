@@ -26,8 +26,8 @@ import com.mperminov.saythesame.data.model.User;
 import com.mperminov.saythesame.data.source.remote.FirebaseUserService;
 import com.mperminov.saythesame.data.source.remote.FriendsService;
 import com.mperminov.saythesame.data.source.remote.UserService;
-import com.mperminov.saythesame.ui.Login.LoginActivity;
 import com.mperminov.saythesame.ui.game.GameActivity;
+import com.mperminov.saythesame.ui.login.LoginActivity;
 import java.util.HashMap;
 import java.util.Map;
 

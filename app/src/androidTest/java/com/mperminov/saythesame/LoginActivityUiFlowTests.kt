@@ -15,9 +15,9 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.mperminov.saythesame.EspressoTextInputLayoutTest.onErrorViewWithinTilWithId
 import com.mperminov.saythesame.R.id
-import com.mperminov.saythesame.ui.Login.LoginActivity
-import com.mperminov.saythesame.ui.Login.fragments.SignInFragment
-import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment
+import com.mperminov.saythesame.ui.login.LoginActivity
+import com.mperminov.saythesame.ui.login.fragments.SignInFragment
+import com.mperminov.saythesame.ui.login.fragments.SignUpFragment
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

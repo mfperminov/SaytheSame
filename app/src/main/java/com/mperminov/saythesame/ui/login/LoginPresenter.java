@@ -1,4 +1,4 @@
-package com.mperminov.saythesame.ui.Login;
+package com.mperminov.saythesame.ui.login;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -29,7 +29,7 @@ import com.mperminov.saythesame.base.BasePresenter;
 import com.mperminov.saythesame.data.model.User;
 import com.mperminov.saythesame.data.source.remote.FirebaseUserService;
 import com.mperminov.saythesame.data.source.remote.UserService;
-import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
+import com.mperminov.saythesame.ui.login.fragments.SignUpFragment;
 import io.reactivex.functions.Predicate;
 import java.util.Arrays;
 

@@ -103,4 +103,7 @@
   <string name="empty_email">Please enter an e-mail</string>
   <string name="empty_password">Please enter a password</string>
   <string name="empty_nickname">Please enter a nickname</string>
+  <string name="logo">Say the same</string>
+  <string name="slogan">The unpredictable text game</string>
+  <string name="sign_up_enter_screen">sign up</string>
 </resources>

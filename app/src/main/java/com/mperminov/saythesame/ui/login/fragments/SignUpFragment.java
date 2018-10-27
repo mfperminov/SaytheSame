@@ -1,4 +1,4 @@
-package com.mperminov.saythesame.ui.Login.fragments;
+package com.mperminov.saythesame.ui.login.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,10 +18,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mperminov.saythesame.R;
 import com.mperminov.saythesame.base.BaseApplication;
-import com.mperminov.saythesame.ui.Login.LoginActivity;
-import com.mperminov.saythesame.ui.Login.LoginActivityModule;
-import com.mperminov.saythesame.ui.Login.LoginPresenter;
-import com.mperminov.saythesame.ui.Login.LoginTextWatcher;
+import com.mperminov.saythesame.ui.login.LoginActivity;
+import com.mperminov.saythesame.ui.login.LoginActivityModule;
+import com.mperminov.saythesame.ui.login.LoginPresenter;
+import com.mperminov.saythesame.ui.login.LoginTextWatcher;
 import javax.inject.Inject;
 
 public class SignUpFragment extends Fragment {

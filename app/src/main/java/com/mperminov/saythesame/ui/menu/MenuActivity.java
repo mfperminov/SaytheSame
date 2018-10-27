@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 public class MenuActivity extends BaseActivity {
+  public static final int REQUEST_COMPLETED = 1003;
   @BindView(R.id.nicknameTv)
   TextView nickText;
   @BindView(R.id.emailTv)
@@ -54,14 +55,31 @@ public class MenuActivity extends BaseActivity {
   @Inject
   AlertDialog.Builder addAlertDialog;
 
-  public static final int REQUEST_COMPLETED = 1003;
+  public static void startWithUser(final BaseActivity activity, final User user) {
+
+    Intent intent = new Intent(activity, MenuActivity.class);
+
+    //ResultReceiver rr = new ResultReceiver(null) {
+    //  @Override protected void onReceiveResult(int resultCode, Bundle resultData) {
+    //    activity.finish();
+    //
+    //  }
+    //};
+    //intent.putExtra("finisher", new ResultReceiver(null) {
+    //  @Override
+    //  protected void onReceiveResult(int resultCode, Bundle resultData) {
+    //    activity.finish();
+    //  }
+    //});
+    //intent.putExtra("finisher", rr);
+    BaseApplication.get(activity).createUserComponent(user);
+    activity.startActivityForResult(intent, REQUEST_COMPLETED);
+  }
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
 
-
     super.onCreate(savedInstanceState);
-
 
     setContentView(R.layout.activity_menu);
     ButterKnife.bind(this);
@@ -121,28 +139,6 @@ public class MenuActivity extends BaseActivity {
         .inject(this);
   }
 
-  public static void startWithUser(final BaseActivity activity, final User user) {
-
-    Intent intent = new Intent(activity, MenuActivity.class);
-
-    //ResultReceiver rr = new ResultReceiver(null) {
-    //  @Override protected void onReceiveResult(int resultCode, Bundle resultData) {
-    //    activity.finish();
-    //
-    //  }
-    //};
-    //intent.putExtra("finisher", new ResultReceiver(null) {
-    //  @Override
-    //  protected void onReceiveResult(int resultCode, Bundle resultData) {
-    //    activity.finish();
-    //  }
-    //});
-    //intent.putExtra("finisher", rr);
-    BaseApplication.get(activity).createUserComponent(user);
-    activity.startActivityForResult(intent, REQUEST_COMPLETED);
-
-  }
-
   public void sendMessageToBreakPreviousScreen() {
     // когда получили интент здесь, то берем РЕзалтРесивер и его методом send()
     // шлем реквест код и исходное активити (логин или сплеш) финиширует
@@ -150,7 +146,6 @@ public class MenuActivity extends BaseActivity {
     //    send(MenuActivity.REQUEST_COMPLETED, new Bundle());
     Intent intent = new Intent();
     setResult(REQUEST_COMPLETED, intent);
-
   }
 
   @OnClick(R.id.start_random_btn)

@@ -7,7 +7,6 @@ import android.support.annotation.StringDef;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.HttpsCallableResult;
 import com.mperminov.saythesame.base.BasePresenter;
 import com.mperminov.saythesame.data.model.Answer;
 import com.mperminov.saythesame.data.model.Rival;
@@ -141,17 +139,14 @@ public class GamePresenter implements BasePresenter {
     return mFunctions
         .getHttpsCallable(GUESS_WRITE_FUNCTION)
         .call(data)
-        .continueWith(new Continuation<HttpsCallableResult, String>() {
-          @Override
-          public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-            String result = "null";
-            try {
-              result = (String) task.getResult().getData();
-            } catch (Exception e) {
-              Log.e("Functions exception", e.getMessage());
-            }
-            return result;
+        .continueWith(task -> {
+          String result = "null";
+          try {
+            result = (String) task.getResult().getData();
+          } catch (Exception e) {
+            Log.e("Functions exception", e.getMessage());
           }
+          return result;
         });
   }
 

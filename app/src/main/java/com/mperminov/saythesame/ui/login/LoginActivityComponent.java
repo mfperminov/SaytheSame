@@ -1,8 +1,8 @@
-package com.mperminov.saythesame.ui.Login;
+package com.mperminov.saythesame.ui.login;
 
 import com.mperminov.saythesame.base.annotation.ActivityScope;
-import com.mperminov.saythesame.ui.Login.fragments.SignInFragment;
-import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
+import com.mperminov.saythesame.ui.login.fragments.SignInFragment;
+import com.mperminov.saythesame.ui.login.fragments.SignUpFragment;
 import dagger.Subcomponent;
 
 @ActivityScope

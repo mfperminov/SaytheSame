@@ -1,4 +1,4 @@
-package com.mperminov.saythesame.ui.Login;
+package com.mperminov.saythesame.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import com.mperminov.saythesame.R;
 import com.mperminov.saythesame.base.BaseActivity;
 import com.mperminov.saythesame.base.BaseApplication;
 import com.mperminov.saythesame.data.model.User;
-import com.mperminov.saythesame.ui.Login.fragments.SignUpFragment;
+import com.mperminov.saythesame.ui.login.fragments.SignUpFragment;
 import com.mperminov.saythesame.ui.menu.MenuActivity;
 import javax.inject.Inject;
 

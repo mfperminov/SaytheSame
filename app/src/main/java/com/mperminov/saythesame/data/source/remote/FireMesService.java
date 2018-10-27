@@ -27,7 +27,6 @@ public class FireMesService extends FirebaseMessagingService {
 
   @Override public void onCreate() {
     super.onCreate();
-
     BaseApplication.get(getApplicationContext()).getAppComponent().inject(this);
   }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/sign_in_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sign_in_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
@@ -12,9 +12,9 @@
       android:id="@+id/si_til_email"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
       android:hint="@string/hint_email"
       android:visibility="visible"
-      android:layout_marginBottom="8dp"
       app:errorEnabled="true"
       >
 
@@ -43,19 +43,19 @@
 
   <android.support.design.button.MaterialButton
       android:id="@+id/si_btn_signin"
-      style="@style/Widget.MaterialComponents.Button"
       android:layout_width="wrap_content"
-      android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
       android:layout_height="wrap_content"
-      android:visibility="visible"
       android:text="@string/sign_in_enter_screen"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+      android:visibility="visible"
+      style="@style/Widget.MaterialComponents.Button"
       />
   <android.support.design.button.MaterialButton
       android:id="@+id/si_btn_signup"
-      style="@style/Widget.MaterialComponents.Button.TextButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:text="@string/sign_up_enter_screen"
       android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-      android:text="sign up"
+      style="@style/Widget.MaterialComponents.Button.TextButton"
       />
 </LinearLayout>

@@ -14,16 +14,6 @@ public abstract class BaseActivity extends AppCompatActivity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setupActivityComponent();
     super.onCreate(savedInstanceState);
-    //br = new NetworkInfoBroadcastReceiver();
-    //if(android.os.Build.VERSION.SDK_INT<24) {
-    //  @SuppressWarnings("deprecation")
-    //  IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-    //  this.registerReceiver(br, filter);
-    //} else {
-    //  IntentFilter filter = new IntentFilter();
-    //  filter.addAction("com.mperminov.saythesame.CONNECTIVITY_CHANGE");
-    //  br.registerNetworkCallbacks(this);
-    //}
   }
 
   protected abstract void setupActivityComponent();

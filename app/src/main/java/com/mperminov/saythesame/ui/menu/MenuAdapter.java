@@ -2,6 +2,7 @@ package com.mperminov.saythesame.ui.menu;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,20 +11,30 @@ import com.mperminov.saythesame.data.model.Friend;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
+
 class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+  private final List<Friend> friends = new ArrayList<>();
   private MenuActivity activity;
 
   public MenuAdapter(MenuActivity activity) {
     this.activity = activity;
   }
 
-  private final List<Friend> friends = new ArrayList<>();
-
   @NonNull @Override
   public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     View itemView = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.list_item_friend, parent, false);
-    return new MenuViewHolder(itemView, friends);
+    MenuViewHolder vh = new MenuViewHolder(itemView);
+
+    vh.itemView.setOnLongClickListener(view -> {
+      int pos = vh.getAdapterPosition();
+      if (pos != NO_POSITION) {
+        Log.d("friend clicked", friends.get(pos).getUsername());
+      }
+      return false;
+    });
+    return vh;
   }
 
   @Override

@@ -34,7 +34,6 @@ public class User implements Parcelable {
     } else {
 
     }
-
     return user;
   }
 
@@ -147,5 +146,6 @@ public class User implements Parcelable {
       return new User[size];
     }
   };
+
 }
 

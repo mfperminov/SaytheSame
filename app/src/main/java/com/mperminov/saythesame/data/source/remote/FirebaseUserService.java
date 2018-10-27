@@ -25,7 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.mperminov.saythesame.R;
 import com.mperminov.saythesame.base.BaseActivity;
 import com.mperminov.saythesame.data.model.User;
-import com.mperminov.saythesame.ui.Login.LoginActivity;
+import com.mperminov.saythesame.ui.login.LoginActivity;
 
 public class FirebaseUserService {
   private Application application;

@@ -1,4 +1,4 @@
-package com.mperminov.saythesame.ui.Login
+package com.mperminov.saythesame.ui.login
 
 import android.support.design.widget.TextInputLayout
 import android.text.Editable

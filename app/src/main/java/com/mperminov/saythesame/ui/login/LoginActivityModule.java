@@ -1,4 +1,4 @@
-package com.mperminov.saythesame.ui.Login;
+package com.mperminov.saythesame.ui.login;
 
 import android.support.v4.app.FragmentManager;
 import com.mperminov.saythesame.base.annotation.ActivityScope;
