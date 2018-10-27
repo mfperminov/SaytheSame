@@ -2,6 +2,7 @@ package com.mperminov.saythesame.ui.menu;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -15,6 +16,9 @@ class MenuViewHolder extends RecyclerView.ViewHolder{
   ImageView avatarImageView;
   @BindView(R.id.tvUser)
   TextView friendNameTextView;
+  @BindView(R.id.expanded_menu) View expandedView;
+  @BindView(R.id.favourite) ImageButton btnAddToFav;
+  @BindView(R.id.play) ImageButton btnPlay;
   View itemView;
 
   public MenuViewHolder(View itemView) {
